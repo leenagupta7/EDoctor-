@@ -1,11 +1,12 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
- 
+
 const AddContact = () => {
     const [form, setForm] = useState({ name: '', relation: '', phonenumber: '' });
-    const  {user} = useAuth0();
-    const userId = user ? user.sub : undefined;
+    const [contact, setContact] = useState([]);
+    const { loginWithRedirect,isAuthenticated,user } = useAuth0();
+    const userId = user?.sub;
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,28 +28,30 @@ const AddContact = () => {
         try {
             const response = await axios.post(`http://localhost:4000/postcontact`, formData);
             console.log(response.data);
+            setContact(response.data.new_user.list);
             setForm({ name: '', relation: '', phonenumber: '' });
         } catch (err) {
             console.log(err);
         }
     };
-     
-    //  const GetContact = () => {
-    //     try{
-    //         const response = axios.get(`http://localhost:4000/${getcontact}`,{
-    //             userId:user.sub
-    //     })
-    //     }catch(err){
-    //         console.log(err);
-    //     }
-    //  }
-    //  useEffect(()=>{
-    //     GetContact();
-    //  },[handleForm])
+    const GetContact = async () => { // Make GetContact an asynchronous function
+        if (userId) {
+            try {
+                const response = await axios.get(`http://localhost:4000/getcontact/${userId}`); // Await the response
+                //console.log('hey', response.data.data[0].list);
+                setContact(response.data.data[0].list);
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    };
+    useEffect(() => {
+        GetContact();
+    }, [])
 
     return (
         <div >
-            <form onSubmit={handleForm} className="flex-col space-y-4">
+            <form onSubmit={isAuthenticated?handleForm:()=>loginWithRedirect()} className="flex-col space-y-4">
                 <div className="space-x-4">
                     <span>Name</span>
                     <input
@@ -83,7 +86,17 @@ const AddContact = () => {
                     submit
                 </button>
             </form>
-           
+            <div>
+                {contact && contact.map((item, index) => {
+                    return (
+                        <div key={index} className="space-x-4">
+                            <span>{item.name}</span>
+                            <span>{item.relation}</span>
+                            <span>{item.phonenumber}</span>
+                        </div>
+                    )
+                })}
+            </div>
         </div>
     );
 };

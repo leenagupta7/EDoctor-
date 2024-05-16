@@ -1,11 +1,234 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import axios from 'axios';
 
-const Calendar = () => {
-  return (
-    <div>
-      
-    </div>
-  )
+const Calendar=()=> {
+    const [tasks, setTasks] = useState([]);
+    const [newTask, setNewTask] = useState("");
+    const [newTaskDateTime, setNewTaskDateTime] = useState("");
+    const [isAlarmPlaying, setIsAlarmPlaying] = useState(false);
+    const [alarmTaskIndex, setAlarmTaskIndex] = useState(null);
+    const [snoozeTime, setSnoozeTime] = useState(null);
+    const audioRef = useRef(null);
+    const [snoozeTimeInput, setSnoozeTimeInput] = useState("");
+    const [showSnoozeTimeInput, setShowSnoozeTimeInput] = useState(false);
+    const { user } = useAuth0();
+    const userId=user?user.sub:undefined;
+
+    useEffect(() => {
+        const timer = setInterval(() => {
+            checkTasksDue();
+        }, 1000);
+
+        return () => {
+            clearInterval(timer);
+        };
+    },[tasks]);
+
+    const addTask = async() => {
+        if (newTask.trim() !== "" && newTaskDateTime.trim() !== "") {
+            try{
+              const response = await axios.post(`http://localhost:4000/addmedicine`,{userId:userId,task:newTask,dateTime: newTaskDateTime })
+              //console.log(response.data.updated_user.addmedicine);
+              setTasks(response.data.updated_user.addmedicine);
+            }catch(err){
+              console.log(err);
+            }
+            setNewTask("");
+            setNewTaskDateTime("");
+        }
+
+    };
+
+    const removeTask = async(index) => {
+        const audio = audioRef.current;
+        audio.pause();
+        audio.currentTime = 0;
+        try{
+            console.log('delete');
+            console.log(index);
+            const response = await axios.delete(`http://localhost:4000/deletemedicine/${userId}/${index}`
+            )
+            console.log(response.data);
+            setTasks(response.data.user.addmedicine);
+        }catch(err){
+            console.log(err);
+        }
+        
+        
+    };
+
+    const snoozeTask = (index) => {
+        setSnoozeTimeInput(tasks[index].dateTime);
+        setShowSnoozeTimeInput(true);
+        setAlarmTaskIndex(index);
+    };
+
+    const checkTasksDue = () => {
+        const now = new Date().getTime();
+
+        for (let i = 0; i < tasks.length; i++) {
+            const taskDateTime = new Date(tasks[i].dateTime).getTime();
+
+            if (now >= taskDateTime) {
+                if (!isAlarmPlaying) {
+                    playSound();
+                    setIsAlarmPlaying(true);
+                    setAlarmTaskIndex(i);
+                    break; // Break the loop after the first alarm
+                }
+            }
+        }
+
+        if (snoozeTime && now >= snoozeTime) {
+            playSound();
+            setIsAlarmPlaying(true);
+            setSnoozeTime(null); // Reset snooze time
+        }
+    };
+    const fetchData=async()=>{
+        if(userId){
+            console.log(userId);
+            try{
+                const response = await axios.get(`http://localhost:4000/getmedicine/${userId}`)
+                console.log(response.data);
+                setTasks(response.data.addmedicine);
+            }catch(err){
+                console.log('error in getmedicine frontend side',err);
+            }
+        }
+    }
+    useEffect(()=>{
+        fetchData();
+    },[])
+    const playSound = () => {
+        const audio = audioRef.current;
+        audio.play();
+    };
+
+    const stopAlarm = () => {
+        const audio = audioRef.current;
+        audio.pause();
+        audio.currentTime = 0;
+        setIsAlarmPlaying(false);
+
+        if (alarmTaskIndex !== null) {
+            removeTask(alarmTaskIndex);
+            setAlarmTaskIndex(null);
+        }
+    };
+
+    const snoozeAlarm = () => {
+        const newSnoozeTime = new Date(snoozeTimeInput).getTime();
+        setSnoozeTime(newSnoozeTime);
+        setShowSnoozeTimeInput(false);
+        const audio = audioRef.current;
+        audio.pause();
+        audio.currentTime = 0;
+        const updatedTasks = [...tasks];
+        updatedTasks[alarmTaskIndex].dateTime = snoozeTimeInput;
+        setTasks(updatedTasks);
+        setIsAlarmPlaying(false); // Stop the alarm after snoozing
+    };
+
+    return (
+        <div className="backgroundImage">
+            
+            <div className="medicalnote flex flex-col items-center">
+                <div className="input-container flex justify-between items-center mb-5 w-3/4">
+                    <input
+                        type="text"
+                        placeholder="New task"
+                        value={newTask}
+                        onChange={(e) => setNewTask(e.target.value)}
+                        className="w-3/4 p-2 border border-gray-300 rounded"
+                    />
+                    <input
+                        type="datetime-local"
+                        value={newTaskDateTime}
+                        onChange={(e) => setNewTaskDateTime(e.target.value)}
+                        className="w-1/4 p-2 border border-gray-300 rounded"
+                    />
+                    <button
+                        onClick={addTask}
+                        className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
+                    >
+                        Add
+                    </button>
+                </div>
+                <ul className="task-list w-3/4">
+                    {tasks.map((task, index) => (
+                        <li
+                            key={index}
+                            className="task-item flex justify-between items-center border border-gray-300 p-2 mb-2 bg-white rounded"
+                        >
+                            <div className="task-details">
+                                <span
+                                    className={
+                                        task.text.startsWith("✔") ? "completed" : "task-text"
+                                    }
+                                >
+                                    {task.text}
+                                </span>
+                                <span className="datetime">{task.dateTime}</span>
+                            </div>
+                            <div className="task-actions">
+                                <button
+                                    onClick={() => removeTask(index)}
+                                    className="complete-button p-1 bg-red-500 text-white rounded hover:bg-red-600 mr-1 transition duration-300"
+                                >
+                                    Complete
+                                </button>
+                                {isAlarmPlaying && alarmTaskIndex === index ? (
+                                    <div>
+                                        <button
+                                            onClick={() => snoozeTask(index)}
+                                            className="snooze-button p-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
+                                        >
+                                            Snooze
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        onClick={() => removeTask(index)}
+                                        className="remove-button p-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300"
+                                    >
+                                      Remove
+                                    </button>
+                                )}
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+                {showSnoozeTimeInput && (
+                    <div>
+                        <input
+                            type="datetime-local"
+                            value={snoozeTimeInput}
+                            onChange={(e) => setSnoozeTimeInput(e.target.value)}
+                            className="w-3/4 p-2 border border-gray-300 rounded mb-2"
+                        />
+                        <button
+                            onClick={snoozeAlarm}
+                            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
+                        >
+                            Snooze Alarm
+                        </button>
+                    </div>
+                )}
+                {isAlarmPlaying && snoozeTime && !showSnoozeTimeInput && (
+                    <button
+                        onClick={stopAlarm}
+                        className="stop-button p-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300"
+                    >
+                        Stop
+                    </button>
+                )}
+                <audio ref={audioRef} src="alarm.mp3" preload="auto" />
+                {/* <Chatbot/> */}
+            </div>
+        </div>
+    );
 }
 
-export default Calendar
+export default Calendar;

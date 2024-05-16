@@ -4,6 +4,7 @@ import Navbar from './Component/Navbar'
 import Blogs from './Pages/Blogs'
 import AddContact from './Pages/AddContact'
 import Calendar from './Pages/Calendar'
+import Home from './Pages/Home'
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <BrowserRouter>
         <Navbar/>
         <Routes>
+          <Route path="/" element={<Home/>}/>
           <Route path="/blog" element={<Blogs/>} ></Route>
           <Route path="/addcontact" element={<AddContact/>} ></Route>
           <Route path="/calendar" element={<Calendar/>} ></Route>
