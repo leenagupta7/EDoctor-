@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
+import Chart from "../Component/Chart";
 
 const Calendar = () => {
     const [tasks, setTasks] = useState([]);
@@ -14,6 +15,11 @@ const Calendar = () => {
     const [showSnoozeTimeInput, setShowSnoozeTimeInput] = useState(false);
     const { user } = useAuth0();
     const userId = user ? user.sub : undefined;
+    const [bundle,setBundle] = useState({
+        complete:0,
+        remove:0,
+        swap:0
+    })
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -29,8 +35,15 @@ const Calendar = () => {
         if (newTask.trim() !== "" && newTaskDateTime.trim() !== "") {
             try {
                 const response = await axios.post(`http://localhost:4000/addmedicine`, { userId: userId, task: newTask, dateTime: newTaskDateTime })
-                //console.log(response.data.updated_user.addmedicine);
                 setTasks(response.data.updated_user.addmedicine);
+                const taskData = response.data.updated_user.task;
+                
+                setBundle({
+                  complete: taskData.complete,
+                  remove: taskData.remove,
+                  swap: taskData.snooze,
+                });
+                console.log('bundle',bundle);
             } catch (err) {
                 console.log(err);
             }
@@ -51,6 +64,12 @@ const Calendar = () => {
             )
             console.log(response.data);
             setTasks(response.data.user.addmedicine);
+            const taskData = response.data.user.task;
+            setBundle({
+              complete: taskData.complete,
+              remove: taskData.remove,
+              swap: taskData.snooze,
+            });
         } catch (err) {
             console.log(err);
         }
@@ -93,6 +112,12 @@ const Calendar = () => {
                 const response = await axios.get(`http://localhost:4000/getmedicine/${userId}`)
                 console.log(response.data);
                 setTasks(response.data.addmedicine);
+                const taskData = response.data.task;
+                setBundle({
+                complete: taskData.complete,
+                remove: taskData.remove,
+                swap: taskData.snooze,
+                });
             } catch (err) {
                 console.log('error in getmedicine frontend side', err);
             }
@@ -230,6 +255,7 @@ const Calendar = () => {
                 <audio ref={audioRef} src="alarm.mp3" preload="auto" />
                 {/* <Chatbot/> */}
             </div>
+            <Chart complete={bundle.complete} remove={bundle.remove} swap={bundle.swap} />
         </div>
     );
 }

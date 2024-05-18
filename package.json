@@ -18,7 +18,9 @@
     "@mui/icons-material": "^5.15.17",
     "@mui/material": "^5.15.17",
     "axios": "^1.6.8",
+    "chart.js": "^4.4.3",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",
     "sweetalert2": "^11.11.0"
