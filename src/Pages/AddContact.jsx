@@ -50,8 +50,9 @@ const AddContact = () => {
     }, [])
 
     return (
-        <div >
-            <form onSubmit={isAuthenticated?handleForm:()=>loginWithRedirect()} className="flex-col space-y-4">
+        <div className="flex" >
+            <div className="  flex-1 border border-gray-200 flex items-center">
+            <form onSubmit={isAuthenticated?handleForm:()=>loginWithRedirect()} className=" flex flex-col space-y-4 ">
                 <div className="space-x-4">
                     <span>Name</span>
                     <input
@@ -86,10 +87,15 @@ const AddContact = () => {
                     submit
                 </button>
             </form>
-            <div>
+            </div>
+            
+            <div className="flex-1 border border-gray-200 p-4 rounded space-y-2">
+               <div className="flex justify-between p-4"> <span>Name</span>
+                <span>Relation</span>
+                <span>Phone No.</span></div>
                 {contact && contact.map((item, index) => {
                     return (
-                        <div key={index} className="space-x-4">
+                        <div key={index} className="flex justify-between space-x-4 border border-gray-500 p-4 rounded">
                             <span>{item.name}</span>
                             <span>{item.relation}</span>
                             <span>{item.phonenumber}</span>
