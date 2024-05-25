@@ -4,7 +4,12 @@ import axios from 'axios';
 import Swal from "sweetalert2";
 import UserAvatar from "../images/user-avatar-32.png";
 import {Link} from 'react-router-dom'
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import { styled } from '@mui/material/styles';
 
+const StyledShoppingCartOutlinedIcon = styled(ShoppingCartOutlinedIcon)(({ theme }) => ({
+  color: 'grey'
+}));
 function Navbar() {
   const [open, setOpen] = useState(false);
   const { user, loginWithRedirect, isAuthenticated, logout } = useAuth0();
@@ -84,9 +89,11 @@ function Navbar() {
                 <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='addcontact'>Add Contact</Link>
                 <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='/calendar'>Calendar</Link>
                 <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='/blog'>Blog</Link>
+                <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='/shop'>Shop</Link>
               </div>
             </div>
           </div>
+          <StyledShoppingCartOutlinedIcon />
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <div onClick={handleDropDownMenu} className="relative ml-3">
               <div>
