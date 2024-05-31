@@ -180,22 +180,22 @@ function Blogs() {
               className="blogform flex flex-col gap-5"
             >
               <textarea
-                className="forminput p-2 rounded bg-gray-800 text-white"
+                className="forminput p-2 rounded border border-gray-500 text-white"
                 type="text"
                 name="title"
                 placeholder="Enter title"
                 value={formField.title}
                 onChange={handleChange}
-                style={{ color: "white" }} // Set text color to white using inline style
+                style={{ color: "black" }} // Set text color to white using inline style
               />
               <textarea
-                className="forminput p-2 rounded bg-gray-800 text-white"
+                className="forminput p-2 rounded  border border-gray-500 "
                 type="text"
                 name="description"
                 placeholder="Enter description"
                 value={formField.description}
                 onChange={handleChange}
-                style={{ color: "white" }} // Set text color to white using inline style
+                style={{ color: "black" }} // Set text color to white using inline style
               />
               <input
                 id="fileInput"
@@ -215,7 +215,7 @@ function Blogs() {
                 />
               )}
               <button
-                className="btn bg-[#8C52FF] hover:bg-[#9461F8] text-black hover:text-white rounded-3xl border-white"
+                className="bg-blue-500 rounded p-2 text-white"
                 type="submit"
               >
                 <span className="xs:block  text-lg">Submit</span>

@@ -1,16 +1,18 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
 import Swal from "sweetalert2";
 import UserAvatar from "../images/user-avatar-32.png";
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { styled } from '@mui/material/styles';
+import { CartContext } from '../Context';
 
 const StyledShoppingCartOutlinedIcon = styled(ShoppingCartOutlinedIcon)(({ theme }) => ({
   color: 'grey'
 }));
 function Navbar() {
+  const {getTotalCartItem} =  useContext(CartContext);
   const [open, setOpen] = useState(false);
   const { user, loginWithRedirect, isAuthenticated, logout } = useAuth0();
   const [userpic, setUserpic] = useState(null);
@@ -86,14 +88,19 @@ function Navbar() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='addcontact'>Add Contact</Link>
+                <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='/addcontact'>Add Contact</Link>
                 <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='/calendar'>Calendar</Link>
                 <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='/blog'>Blog</Link>
                 <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='/shop'>Shop</Link>
               </div>
             </div>
           </div>
-          <StyledShoppingCartOutlinedIcon />
+          <Link to="/cart"><div className="relative inline-block">
+            <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1 rounded-full bg-red-500 h-4 w-4 flex items-center justify-center">
+              <span className="text-white text-xs">{getTotalCartItem()}</span>
+            </div>
+            <StyledShoppingCartOutlinedIcon />
+          </div></Link>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <div onClick={handleDropDownMenu} className="relative ml-3">
               <div>
@@ -110,12 +117,12 @@ function Navbar() {
                 </button>
               </div>
               <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileInput}
-                  style={{ display: "none" }}
-                  onChange={handleFileSelected}
-                />
+                type="file"
+                accept="image/*"
+                ref={fileInput}
+                style={{ display: "none" }}
+                onChange={handleFileSelected}
+              />
               {open && (
                 <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
                   <a onClick={handleUpdateProfileClick} href="#" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-0">Your Profile</a>
