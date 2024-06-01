@@ -17,7 +17,7 @@ const CartCard = (props) => {
       </div>
       <div className="flex justify-between">
         <div className="space-x-1 border border-gray-300 rounded-full px-2 flex items-center">
-          <StarIcon style={{ fontSize: '16px', color: 'blue' }} />
+          <StarIcon style={{ fontSize: '16px', color: "rgb(46, 200, 150)" }} />
           <span className="text-sm font-bold">5.0</span>
         </div>
         <div className="flex items-center justify-center border border-gray-500 rounded-full h-6 w-6">
@@ -36,14 +36,14 @@ const CartCard = (props) => {
       </div>
       <span className="text-gray-500 italic">Mkt: Herbolab India Pvt Ltd</span>
       {cart[index] === 0 ? (
-        <button className="mt-2 bg-blue-500 text-white rounded-lg p-2 font-bold" onClick={() => addbtn(index)}>
+        <button className="mt-2 bg-green-blue text-white rounded-lg p-2 font-bold" onClick={() => addbtn(index)}>
           ADD TO CART
         </button>
       ) : (
         <div className="flex justify-between">
-          <AddCircleIcon onClick={() => addbtn(index)} style={{ fontSize: '30px', color: 'blue' }} />
+          <AddCircleIcon onClick={() => addbtn(index)} style={{ fontSize: '30px', color: "rgb(46, 200, 150)" }} />
           <div className="flex items-center justify-center border border-gray-300 w-24 rounded">{cart[index]}</div>
-          <RemoveCircleIcon onClick={() => removebtn(index)} style={{ fontSize: '30px', color: 'blue' }} />
+          <RemoveCircleIcon onClick={() => removebtn(index)} style={{ fontSize: '30px', color: "rgb(46, 200, 150)" }} />
         </div>
       )}
     </div>

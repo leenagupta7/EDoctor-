@@ -6,7 +6,7 @@ import { CartContext } from '../Context';
 const EmptyCart = () => {
     const { favourite, Allproduct } = useContext(CartContext);
     return (
-        <div className="flex flex-col bg-blue-100 h-screen p-12 space-y-20">
+        <div className="flex flex-col bg-green-100 h-screen p-12 space-y-20">
             <span className="text-2xl">My Cart</span>
             <div className="flex flex-col items-center justify-center space-y-4">
                 <img className="h-36" src={emptycart} alt="" />
@@ -15,7 +15,7 @@ const EmptyCart = () => {
                     <p className="text-gray-500 text-sm">You have no items added in the cart.</p>
                     <p className="text-gray-500 text-sm">Explore and add products you like!</p>
                 </div>
-                <Link to="/shop"> <button className="mt-2 bg-blue-500 text-white rounded-lg p-2 font-bold w-40" >
+                <Link to="/shop"> <button className="mt-2 bg-green-blue text-white rounded-lg p-2 font-bold w-40" >
                     ADD TO CART
                 </button></Link>
             </div>

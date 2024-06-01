@@ -160,10 +160,10 @@ const Calendar = () => {
     };
 
     return (
-        <div className="backgroundImage">
-
+        <div className="m-12">
             <div className="medicalnote flex flex-col items-center">
-                <div className="input-container flex justify-between items-center mb-5 w-3/4">
+                <div className="input-container flex flex-col space-y-2  justify-between items-center mb-5 w-3/4">
+                    <div className="flex">
                     <input
                         type="text"
                         placeholder="New task"
@@ -176,10 +176,10 @@ const Calendar = () => {
                         value={newTaskDateTime}
                         onChange={(e) => setNewTaskDateTime(e.target.value)}
                         className="w-1/4 p-2 border border-gray-300 rounded"
-                    />
+                    /></div>
                     <button
                         onClick={addTask}
-                        className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
+                        className="p-2 bg-green-blue w-44 font-bold text-white rounded hover:bg-green-800 transition duration-300"
                     >
                         Add
                     </button>
@@ -188,22 +188,18 @@ const Calendar = () => {
                     {tasks.map((task, index) => (
                         <li
                             key={index}
-                            className="task-item flex justify-between items-center border border-gray-300 p-2 mb-2 bg-white rounded"
+                            className=" flex justify-between items-center border border-gray-300 p-2 mb-2 bg-white rounded"
                         >
-                            <div className="task-details">
-                                <span
-                                    className={
-                                        task.text.startsWith("✔") ? "completed" : "task-text"
-                                    }
-                                >
+                            <div className="flex flex-col rounded">
+                                <span>
                                     {task.text}
                                 </span>
-                                <span className="datetime">{task.dateTime}</span>
+                                <span className="">{task.dateTime}</span>
                             </div>
-                            <div className="task-actions">
+                            <div className="flex space-x-2">
                                 <button
                                     onClick={() => removeTask(index,"c")}
-                                    className="complete-button p-1 bg-red-500 text-white rounded hover:bg-red-600 mr-1 transition duration-300"
+                                    className="bg-red-400 px-2 py-1 rounded text-white font-bold w-24"
                                 >
                                     Complete
                                 </button>
@@ -211,7 +207,7 @@ const Calendar = () => {
                                     <div>
                                         <button
                                             onClick={() => snoozeTask(index)}
-                                            className="snooze-button p-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
+                                            className="bg-red-400 px-2 py-1 rounded text-white font-bold w-24"
                                         >
                                             Snooze
                                         </button>
@@ -219,7 +215,7 @@ const Calendar = () => {
                                 ) : (
                                     <button
                                         onClick={() => removeTask(index,"r")}
-                                        className="remove-button p-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300"
+                                        className="bg-red-400 px-2 py-1 rounded text-white font-bold w-240"
                                     >
                                         Remove
                                     </button>
@@ -229,7 +225,7 @@ const Calendar = () => {
                     ))}
                 </ul>
                 {showSnoozeTimeInput && (
-                    <div>
+                    <div className="flex space-x-2 justify-center items-center">
                         <input
                             type="datetime-local"
                             value={snoozeTimeInput}
@@ -238,22 +234,13 @@ const Calendar = () => {
                         />
                         <button
                             onClick={snoozeAlarm}
-                            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-300"
+                            className="w-44 p-2 bg-green-blue font-bold text-white rounded hover:bg-green-800 transition duration-300"
                         >
                             Snooze Alarm
                         </button>
                     </div>
                 )}
-                {/* {isAlarmPlaying && snoozeTime && !showSnoozeTimeInput && (
-                    <button
-                        onClick={stopAlarm}
-                        className="stop-button p-2 bg-red-500 text-white rounded hover:bg-red-600 transition duration-300"
-                    >
-                        Stop
-                    </button>
-                )} */}
                 <audio ref={audioRef} src="alarm.mp3" preload="auto" />
-                {/* <Chatbot/> */}
             </div>
             <Chart complete={bundle.complete} remove={bundle.remove} swap={bundle.swap} />
         </div>

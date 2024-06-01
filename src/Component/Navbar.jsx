@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { styled } from '@mui/material/styles';
 import { CartContext } from '../Context';
+import Edoctorlogo from '../images/Edoctorlogo.webp'
 
 const StyledShoppingCartOutlinedIcon = styled(ShoppingCartOutlinedIcon)(({ theme }) => ({
   color: 'grey'
@@ -79,22 +80,19 @@ function Navbar() {
     <nav className="bg-white border">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-            {/* Your mobile menu button code */}
-          </div>
-          <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex flex-shrink-0 items-center">
-              <Link to='/'><img className="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=500" alt="Your Company" /></Link>
+          <div className="flex items-center justify-center sm:items-stretch sm:justify-start">
+            <div className="flex items-center">
+              <Link to='/'><img className="h-8 w-auto" src={Edoctorlogo} alt="Your Company" /></Link>
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='/addcontact'>Add Contact</Link>
-                <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='/calendar'>Calendar</Link>
-                <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='/blog'>Blog</Link>
-                <Link className="text-blue-600 hover:bg-white-500 hover:text-blue-400 rounded-md px-3 py-2 text-sm font-medium" to='/shop'>Shop</Link>
+                <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/addcontact'>Add Contact</Link>
+                <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/calendar'>Calendar</Link>
+                <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/shop'>Shop</Link>
               </div>
             </div>
           </div>
+          <div className="flex space-x-2 items-center">
           <Link to="/cart"><div className="relative inline-block">
             <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1 rounded-full bg-red-500 h-4 w-4 flex items-center justify-center">
               <span className="text-white text-xs">{getTotalCartItem()}</span>
@@ -136,6 +134,7 @@ function Navbar() {
               )}
             </div>
           </div>
+        </div>
         </div>
       </div>
     </nav>
