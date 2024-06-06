@@ -8,6 +8,9 @@ import Shop from './Pages/Shop'
 import Cart from './Pages/Cart'
 import Success from './Pages/Success';  
 import Cancel from './Pages/Cancel';    
+import AddDoctor from './Pages/AddDoctor'
+import DoctorList from './Pages/DoctorList'
+import Doctor from './Pages/Doctor'
 
 const App = () => {
   return (
@@ -21,8 +24,11 @@ const App = () => {
           <Route path="/calendar" element={<Calendar/>} ></Route>
           <Route path="/shop" element={<Shop/>} ></Route>
           <Route path="/cart" element={<Cart/>} ></Route>
+          <Route path="/addDoctor" element={<AddDoctor/>} ></Route>
+          <Route path="/doctorlist" element={<DoctorList/>} ></Route>
           <Route path="/success" element={<Success/>} ></Route>
           <Route path="/cancel" element={<Cancel/>} ></Route>
+          <Route path="/doctor/:id" element = {<Doctor/>}></Route>
         </Routes>
       </BrowserRouter>
     </div>
