@@ -22,7 +22,7 @@ const DoctorList = () => {
       <div className="flex justify-center items-center h-screen grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {
           Doctor.map((item, index) => (
-            <Link to={`/doctor/${index}`}><div key={index} className="shadow-md py-12 px-4 flex flex-col items-center w-96 space-y-8 ">
+            <Link key={index} to={`/doctor/${index}`}><div key={index} className="shadow-md py-12 px-4 flex flex-col items-center w-96 space-y-8 ">
               <div className="flex items-center">
                 <img className="rounded-full h-56 w-56" src={item.image} alt="" />
               </div>

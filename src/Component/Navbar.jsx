@@ -24,7 +24,7 @@ function Navbar() {
   useEffect(() => {
     fetchUserProfile();
   }, []);
-
+ 
   const handleDropDownMenu = () => {
     setOpen(!open);
   };
@@ -42,6 +42,7 @@ function Navbar() {
     try {
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("name",user.name);
       formData.append("userId", user.sub);
       const response = await axios.post(
         `http://localhost:4000/updateProfile`,
@@ -70,8 +71,9 @@ function Navbar() {
   const fetchUserProfile = async () => {
     if (!user) return;
     const userId = user?.sub;
+    const name=user?.name;
     try {
-      const response = await axios.get(`http://localhost:4000/${userId}`);
+      const response = await axios.get(`http://localhost:4000/getProfile/${userId}/${name}`);
       if (response.data.user[0] && response.data.user[0].picture) {
         setUserpic(response.data.user[0].picture);
       }
@@ -94,6 +96,7 @@ function Navbar() {
                 <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/calendar'>Calendar</Link>
                 <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/shop'>Shop</Link>
                 <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/doctorlist'>Doctor</Link>
+                <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/meetinglist'>Meeting</Link>
               </div>
             </div>
           </div>

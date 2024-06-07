@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useAuth0 } from '@auth0/auth0-react';
 
 const Doctor = () => {
   const { id } = useParams();
@@ -8,6 +9,7 @@ const Doctor = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
+  const {user} = useAuth0();
   const handleDateChange = (event) => {
     setDate(event.target.value);
   };
@@ -30,10 +32,17 @@ const Doctor = () => {
     }
     fetchData();
   }, [])
-  const handleAddMeeting = () => {
+  const handleAddMeeting = async() => {
     togglePopup();
-
+    try{
+      const data = await axios.post('http://localhost:4000/handlemeeting',{doctorId:item._id,userId:user.sub,date:date,time:time});
+      console.log(data.data);
+    }catch(err){
+      console.log('error in doctor frotnend',err);
+    }
+  
   }
+  console.log(item);
   return (
 
     <div className=" m-24 space-y-12">

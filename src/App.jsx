@@ -11,6 +11,7 @@ import Cancel from './Pages/Cancel';
 import AddDoctor from './Pages/AddDoctor'
 import DoctorList from './Pages/DoctorList'
 import Doctor from './Pages/Doctor'
+import Meeting from './Pages/Meeting'
 
 const App = () => {
   return (
@@ -29,6 +30,8 @@ const App = () => {
           <Route path="/success" element={<Success/>} ></Route>
           <Route path="/cancel" element={<Cancel/>} ></Route>
           <Route path="/doctor/:id" element = {<Doctor/>}></Route>
+          <Route path="/meetinglist" element = {<Meeting/>}></Route>
+          
         </Routes>
       </BrowserRouter>
     </div>
