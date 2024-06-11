@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
 import Chart from "../Component/Chart";
-
+import Swal from "sweetalert2";
 const Calendar = () => {
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState("");
@@ -13,7 +13,7 @@ const Calendar = () => {
     const audioRef = useRef(null);
     const [snoozeTimeInput, setSnoozeTimeInput] = useState("");
     const [showSnoozeTimeInput, setShowSnoozeTimeInput] = useState(false);
-    const { user } = useAuth0();
+    const { user,isAuthenticated,loginWithRedirect } = useAuth0();
     const userId = user ? user.sub : undefined;
     const [bundle,setBundle] = useState({
         complete:0,
@@ -32,6 +32,7 @@ const Calendar = () => {
     }, [tasks]);
 
     const addTask = async () => {
+        if(user){
         if (newTask.trim() !== "" && newTaskDateTime.trim() !== "") {
             try {
                 const response = await axios.post(`http://localhost:4000/addmedicine`, { userId: userId, task: newTask, dateTime: newTaskDateTime })
@@ -50,7 +51,13 @@ const Calendar = () => {
             setNewTask("");
             setNewTaskDateTime("");
         }
-
+}else{
+    Swal.fire({
+        title: "Error",
+        text:'SignIn first',
+        icon: "error",
+      });
+}
     };
 
     const removeTask = async (index,task) => {
@@ -160,7 +167,8 @@ const Calendar = () => {
     };
 
     return (
-        <div className="m-12">
+
+        <div className="bg-green-100 h-screen p-12">
             <div className="medicalnote flex flex-col items-center">
                 <div className="input-container flex flex-col space-y-2  justify-between items-center mb-5 w-3/4">
                     <div className="flex">
@@ -178,7 +186,7 @@ const Calendar = () => {
                         className="w-1/4 p-2 border border-gray-300 rounded"
                     /></div>
                     <button
-                        onClick={addTask}
+                        onClick={isAuthenticated?addTask:() => loginWithRedirect()}
                         className="p-2 bg-green-blue w-44 font-bold text-white rounded hover:bg-green-800 transition duration-300"
                     >
                         Add

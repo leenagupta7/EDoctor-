@@ -8,7 +8,7 @@ const Footercomponent = () => {
     <div className="flex flex-col justify-center items-center gap-12 p-8 ">
       <div className="flex items-center gap-5">
         {/* <img src={footer_logo} alt="logo" className="w-16 md:w-24" /> */}
-        <p className="text-gray-800 text-2xl md:text-4xl font-bold">CleverBooks</p>
+        <p className="text-gray-800 text-2xl md:text-4xl font-bold">EDoctor</p>
       </div>
       <ul className="flex list-none gap-12 text-gray-800 text-sm md:text-base">
         <li className="cursor-pointer">Company</li>

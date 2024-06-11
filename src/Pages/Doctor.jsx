@@ -45,7 +45,7 @@ const Doctor = () => {
   console.log(item);
   return (
 
-    <div className=" m-24 space-y-12">
+    <div className=" p-24 space-y-12">
       <div className=" flex flex items-center space-y-8 ">
         <div className="flex items-center">
           <img className="border rounded-full h-56 w-56" src={item.image} alt="" />

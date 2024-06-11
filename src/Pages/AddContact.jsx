@@ -2,7 +2,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ClearIcon from '@mui/icons-material/Clear';
-
+import Swal from "sweetalert2";
 const AddContact = () => {
     const [form, setForm] = useState({ name: '', relation: '', phonenumber: '' });
     const [contact, setContact] = useState([]);
@@ -33,6 +33,7 @@ const AddContact = () => {
             phonenumber: form.phonenumber
         };
         console.log('formdata', formData);
+        if(user){
         try {
             const response = await axios.post(`http://localhost:4000/postcontact`, formData);
             console.log(response.data);
@@ -40,6 +41,12 @@ const AddContact = () => {
             setForm({ name: '', relation: '', phonenumber: '' });
         } catch (err) {
             console.log(err);
+        }}else{
+            Swal.fire({
+                title: "Error",
+                text:'SignIn first',
+                icon: "error",
+              });
         }
     };
 
@@ -68,8 +75,9 @@ const AddContact = () => {
     }, [userId]); // Added userId as a dependency to re-fetch data when it changes
 
     return (
-        <div className="flex flex-col m-12 items-center space-y-12">
-            <div className="p-4 flex flex-col shadow-md">
+        <div className="bg-green-100 h-screen">
+        <div className="flex flex-col p-12 items-center space-y-12">
+            <div className="bg-white p-4 flex flex-col shadow-md">
                 <form onSubmit={isAuthenticated ? handleForm : () => loginWithRedirect()} className="flex flex-col space-y-4 w-96">
                     <div className="flex justify-between">
                         <span>Name</span>
@@ -109,7 +117,7 @@ const AddContact = () => {
                 </form>
             </div>
             
-            <div className="flex-1 border border-gray-200 p-4 rounded">
+            <div className="bg-white flex-1 border border-gray-200 p-4 rounded">
                 <div className="grid grid-cols-4 gap-5 p-4 font-semibold items-center">
                     <span>Name</span>
                     <span>Relation</span>
@@ -129,6 +137,7 @@ const AddContact = () => {
                     })}
                 </div>
             </div>
+        </div>
         </div>
     );
 };
