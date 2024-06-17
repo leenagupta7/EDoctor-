@@ -15,6 +15,7 @@ const Calendar = () => {
     const [showSnoozeTimeInput, setShowSnoozeTimeInput] = useState(false);
     const { user,isAuthenticated,loginWithRedirect } = useAuth0();
     const userId = user ? user.sub : undefined;
+    const Baseurl=import.meta.env.VITE_API_BASE_URL;
     const [bundle,setBundle] = useState({
         complete:0,
         remove:0,
@@ -35,7 +36,7 @@ const Calendar = () => {
         if(user){
         if (newTask.trim() !== "" && newTaskDateTime.trim() !== "") {
             try {
-                const response = await axios.post(`http://localhost:4000/addmedicine`, { userId: userId, task: newTask, dateTime: newTaskDateTime })
+                const response = await axios.post(`${Baseurl}api/users/addmedicine`, { userId: userId, task: newTask, dateTime: newTaskDateTime })
                 setTasks(response.data.updated_user.addmedicine);
                 const taskData = response.data.updated_user.task;
                 
@@ -67,7 +68,7 @@ const Calendar = () => {
         try {
             console.log('delete');
             console.log(index);
-            const response = await axios.delete(`http://localhost:4000/deletemedicine/${userId}/${index}/${task}`
+            const response = await axios.delete(`${Baseurl}api/users/deletemedicine/${userId}/${index}/${task}`
             )
             console.log(response.data);
             setTasks(response.data.user.addmedicine);
@@ -116,7 +117,7 @@ const Calendar = () => {
         if (userId) {
             console.log(userId);
             try {
-                const response = await axios.get(`http://localhost:4000/getmedicine/${userId}`)
+                const response = await axios.get(`${Baseurl}api/users/getmedicine/${userId}`)
                 console.log(response.data);
                 setTasks(response.data.addmedicine);
                 const taskData = response.data.task;
@@ -158,7 +159,7 @@ const Calendar = () => {
         audio.pause();
         audio.currentTime = 0;
         try {
-            const response = await axios.put(`http://localhost:4000/updatemedicine/${userId}`, {index:alarmTaskIndex, dateTime: snoozeTimeInput})
+            const response = await axios.put(`${Baseurl}api/users/updatemedicine/${userId}`, {index:alarmTaskIndex, dateTime: snoozeTimeInput})
             setTasks(response.data.updated_user.addmedicine);
         } catch (err) {
             console.log(err);

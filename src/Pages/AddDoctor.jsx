@@ -9,7 +9,7 @@ const AddDoctor = () => {
     experience: '',
     file:null,
   });
-  
+  const Baseurl=import.meta.env.VITE_API_BASE_URL;
   const handleChange = (e) => {
     const { name, value ,files} = e.target;
     if(name==='file' && files && files.length > 0){
@@ -35,7 +35,7 @@ const AddDoctor = () => {
     formData.append('file', formField.file);
   
     try {
-      const response = await axios.post('http://localhost:4000/adddoctor', formData);
+      const response = await axios.post(`${Baseurl}/api/doctor/adddoctor`, formData);
       setFormField({
         name: '',
         specialization: '',

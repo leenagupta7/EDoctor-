@@ -8,7 +8,7 @@ const AddContact = () => {
     const [contact, setContact] = useState([]);
     const { loginWithRedirect, isAuthenticated, user } = useAuth0();
     const userId = user?.sub;
-
+    const Baseurl=import.meta.env.VITE_API_BASE_URL;
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm(prevState => ({
@@ -35,7 +35,7 @@ const AddContact = () => {
         console.log('formdata', formData);
         if(user){
         try {
-            const response = await axios.post(`http://localhost:4000/postcontact`, formData);
+            const response = await axios.post(`${Baseurl}/api/users/postcontact`, formData);
             console.log(response.data);
             setContact(response.data.new_user.list);
             setForm({ name: '', relation: '', phonenumber: '' });
@@ -53,7 +53,7 @@ const AddContact = () => {
     const GetContact = async () => {
         if (userId) {
             try {
-                const response = await axios.get(`http://localhost:4000/getcontact/${userId}`);
+                const response = await axios.get(`${Baseurl}/api/users/getcontact/${userId}`);
                 setContact(response.data.data[0].list);
             } catch (err) {
                 console.log(err);
@@ -62,7 +62,7 @@ const AddContact = () => {
     };
     const handleDelete=async(index) => {
         try{
-            const data=await axios.delete(`http://localhost:4000/deladdcontact/${userId}/${index}`)
+            const data=await axios.delete(`${Baseurl}/api/users/deladdcontact/${userId}/${index}`)
             console.log(data.data);
             setContact(data.data.list);
         }catch(err){

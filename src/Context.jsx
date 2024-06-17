@@ -19,7 +19,7 @@ const getDefaultFav = () => {
   }
   return favourite;
 }
-
+const Baseurl=import.meta.env.VITE_API_BASE_URL;
 const CartProvider = ({children})=>{
     const { user } = useAuth0();
     const [cart,setCart] = useState(getDefaultCart());
@@ -28,7 +28,7 @@ const CartProvider = ({children})=>{
       console.log('fafjaa;faf',index);
       if(user){
         try{
-          const data = await axios.post('http://localhost:4000/addproduct',{index:index,userId:user.sub})
+          const data = await axios.post(`${Baseurl}/api/users/addproduct`,{index:index,userId:user.sub})
           console.log(data.data.cart);
           setCart(data.data.cart);
         }catch(err){
@@ -39,7 +39,7 @@ const CartProvider = ({children})=>{
       console.log('fafjaa;faf',index);
       if(user){
         try{
-          const data = await axios.post('http://localhost:4000/removeproduct',{index:index,userId:user.sub})
+          const data = await axios.post(`${Baseurl}/api/users/removeproduct`,{index:index,userId:user.sub})
           console.log(data.data.cart);
           setCart(data.data.cart);
         }catch(err){
@@ -49,7 +49,7 @@ const CartProvider = ({children})=>{
     const getproduct = async () => {
       if (user) {
           try {
-              const { data } = await axios.get(`http://localhost:4000/getproduct/${user.sub}`);
+              const { data } = await axios.get(`${Baseurl}/api/users/getproduct/${user.sub}`);
               setCart(data.cart);
               setFavourite(data.favourite);
           } catch (err) {
@@ -66,7 +66,7 @@ const CartProvider = ({children})=>{
     const favbtn=async(index)=>{
       if(user){
         try{
-          const data = await axios.post('http://localhost:4000/favproduct',{index:index,userId:user.sub})
+          const data = await axios.post(`${Baseurl}/api/users/favproduct`,{index:index,userId:user.sub})
           console.log(data.data);
           setFavourite(data.data.favourite);
         }catch(err){
@@ -77,7 +77,7 @@ const CartProvider = ({children})=>{
       console.log('fafjaa;faf',index);
       if(user){
         try{
-          const data = await axios.post('http://localhost:4000/nonfavproduct',{index:index,userId:user.sub})
+          const data = await axios.post(`${Baseurl}/api/users/nonfavproduct`,{index:index,userId:user.sub})
           console.log(data.data.cart);
           setFavourite(data.data.favourite);
         }catch(err){

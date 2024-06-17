@@ -4,10 +4,11 @@ import { Link } from 'react-router-dom';
 
 const DoctorList = () => {
   const [Doctor, SetDoctor] = useState([]);
+  const Baseurl=import.meta.env.VITE_API_BASE_URL;
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:4000/listdoctor')
+        const response = await axios.get(`${Baseurl}/api/doctor/listdoctor`)
         console.log(response);
         SetDoctor(response.data);
       } catch (err) {

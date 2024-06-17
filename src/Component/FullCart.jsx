@@ -10,7 +10,7 @@ const FullCart = () => {
     const totalAmount = getTotalCartAmount();
     try {
         const stripe = await loadStripe("pk_test_51PM57nRvV5nwz6UhGMpbqvjkxcogrTunxBXLBO7AFFoNO0y4LqmTeXaJa27NbWDQLitLEgHrTa3JE4KecW2798ep00pLEIZcdk");
-        const response = await axios.post('http://localhost:4000/checkout-session', { totalAmount, cart, Allproduct });
+        const response = await axios.post('http://localhost:4000/api/stripe/checkout-session', { totalAmount, cart, Allproduct });
         const sessionId = response.data.id;
         const result = await stripe.redirectToCheckout({
             sessionId: sessionId,
