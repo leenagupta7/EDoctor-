@@ -13,11 +13,10 @@ import AddDoctor from '../Pages/AddDoctor';
 const StyledShoppingCartOutlinedIcon = styled(ShoppingCartOutlinedIcon)(({ theme }) => ({
   color: 'grey'
 }));
-
+const Baseurl=import.meta.env.VITE_API_BASE_URL;
 function Navbar() {
   const { getTotalCartItem } = useContext(CartContext);
   const [open, setOpen] = useState(false);
-  const { user, loginWithRedirect, isAuthenticated, logout } = useAuth0();
   const [userpic, setUserpic] = useState(null);
   const fileInput = useRef(null);
 
@@ -33,23 +32,30 @@ function Navbar() {
     e.preventDefault();
     fileInput.current.click();
   };
-
   const handleFileSelected = async (event) => {
     if (!event || !event.target || !event.target.files || event.target.files.length === 0) {
       return; // Do nothing if event or files are not available
     }
+    
     const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("name",user.name);
-      formData.append("userId", user.sub);
       const response = await axios.post(
-        `http://localhost:4000/updateProfile`,
-        formData
+        `${Baseurl}/api/users/updateProfile`,
+        formData,
+        {
+          headers: {
+            'auth-token': localStorage.getItem('auth-token'), // Assuming you're using JWT token for authentication
+            'Content-Type': 'multipart/form-data', // Important: Use multipart/form-data for file uploads
+          },
+        }
       );
+
+      // Assuming response.data.user.picture contains the updated profile picture URL
       setUserpic(response.data.user.picture);
-      setOpen(false);
+      setOpen(false); // Close any modal or dialog box
       Swal.fire({
         title: "Profile picture updated successfully!",
         icon: "success",
@@ -69,11 +75,12 @@ function Navbar() {
   };
 
   const fetchUserProfile = async () => {
-    if (!user) return;
-    const userId = user?.sub;
-    const name=user?.name;
     try {
-      const response = await axios.get(`http://localhost:4000/getProfile/${userId}/${name}`);
+      const response = await axios.get(`${Baseurl}/api/users/getProfile`,{
+        headers: {
+            'auth-token': `${localStorage.getItem('auth-token')}`,
+            'Content-Type': 'application/json',
+        },});
       if (response.data.user[0] && response.data.user[0].picture) {
         setUserpic(response.data.user[0].picture);
       }
@@ -116,11 +123,7 @@ function Navbar() {
                     <span className="absolute -inset-1.5"></span>
                     <span className="sr-only">Open user menu</span>
                     <img className="h-8 w-8 rounded-full" src={
-                      userpic
-                        ? userpic
-                        : user && user.picture
-                          ? user.picture
-                          : UserAvatar
+                     userpic?userpic:UserAvatar
                     } alt="" />
                   </button>
                 </div>
@@ -135,12 +138,12 @@ function Navbar() {
                   <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
                     <button onClick={handleUpdateProfileClick} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-0">Your Profile</button>
                     <button className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-1">Contact us</button>
-                    {isAuthenticated ? (
-                      <button onClick={() => logout()} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-2">Sign out</button>
-                    ) : (
-                      <button onClick={() => loginWithRedirect()} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-2">Sign in</button>
-                    )}
-                    <Link to="/addDoctor" className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-3">For Doctor</Link>
+                    
+                      <button onClick={() => {
+                        localStorage.removeItem('auth-token');
+                        getUser();
+                        navigate('/login');
+                      }} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-2">Sign out</button>
                   </div>
                 )}
               </div>

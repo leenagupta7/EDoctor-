@@ -1,13 +1,10 @@
-import { useAuth0 } from '@auth0/auth0-react';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ClearIcon from '@mui/icons-material/Clear';
-import Swal from "sweetalert2";
+import Navbar from '../Component/Navbar';
 const AddContact = () => {
     const [form, setForm] = useState({ name: '', relation: '', phonenumber: '' });
     const [contact, setContact] = useState([]);
-    const { loginWithRedirect, isAuthenticated, user } = useAuth0();
-    const userId = user?.sub;
     const Baseurl=import.meta.env.VITE_API_BASE_URL;
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -27,43 +24,49 @@ const AddContact = () => {
         }
 
         const formData = {
-            userId: user.sub,
             name: form.name,
             relation: form.relation,
             phonenumber: form.phonenumber
         };
-        console.log('formdata', formData);
-        if(user){
+       // console.log('formdata', formData);
+       
         try {
-            const response = await axios.post(`${Baseurl}/api/users/postcontact`, formData);
+            const response = await axios.post(`${Baseurl}/api/users/postcontact`, formData, {
+                headers: {
+                    'auth-token': localStorage.getItem('auth-token'),
+                    'Content-Type': 'application/json',
+                },
+            });
+            
             console.log(response.data);
             setContact(response.data.new_user.list);
             setForm({ name: '', relation: '', phonenumber: '' });
         } catch (err) {
-            console.log(err);
-        }}else{
-            Swal.fire({
-                title: "Error",
-                text:'SignIn first',
-                icon: "error",
-              });
+            console.error(err);
         }
     };
 
     const GetContact = async () => {
-        if (userId) {
             try {
-                const response = await axios.get(`${Baseurl}/api/users/getcontact/${userId}`);
+                const response = await axios.get(`${Baseurl}/api/users/getcontact`,{
+                    headers: {
+                        'auth-token': `${localStorage.getItem('auth-token')}`,
+                        'Content-Type': 'application/json',
+                    },});
+                   // console.log('response',response);
                 setContact(response.data.data[0].list);
             } catch (err) {
                 console.log(err);
             }
-        }
     };
     const handleDelete=async(index) => {
         try{
-            const data=await axios.delete(`${Baseurl}/api/users/deladdcontact/${userId}/${index}`)
-            console.log(data.data);
+            const data=await axios.delete(`${Baseurl}/api/users/deladdcontact/${index}`,{
+                headers: {
+                    'auth-token': `${localStorage.getItem('auth-token')}`,
+                    'Content-Type': 'application/json',
+                },})
+           // console.log(data.data);
             setContact(data.data.list);
         }catch(err){
             console.log('error in add contact delete btn',err)
@@ -72,13 +75,14 @@ const AddContact = () => {
 
     useEffect(() => {
         GetContact();
-    }, [userId]); // Added userId as a dependency to re-fetch data when it changes
+    }, []); // Added userId as a dependency to re-fetch data when it changes
 
     return (
         <div className="bg-green-100 h-screen">
+            <Navbar/>
         <div className="flex flex-col p-12 items-center space-y-12">
             <div className="bg-white p-4 flex flex-col shadow-md">
-                <form onSubmit={isAuthenticated ? handleForm : () => loginWithRedirect()} className="flex flex-col space-y-4 w-96">
+                <form onSubmit={ handleForm} className="flex flex-col space-y-4 w-96">
                     <div className="flex justify-between">
                         <span>Name</span>
                         <input

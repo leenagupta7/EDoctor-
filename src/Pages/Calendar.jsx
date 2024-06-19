@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
 import Chart from "../Component/Chart";
 import Swal from "sweetalert2";
+import Navbar from "../Component/Navbar";
 const Calendar = () => {
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState("");
@@ -13,8 +13,6 @@ const Calendar = () => {
     const audioRef = useRef(null);
     const [snoozeTimeInput, setSnoozeTimeInput] = useState("");
     const [showSnoozeTimeInput, setShowSnoozeTimeInput] = useState(false);
-    const { user,isAuthenticated,loginWithRedirect } = useAuth0();
-    const userId = user ? user.sub : undefined;
     const Baseurl=import.meta.env.VITE_API_BASE_URL;
     const [bundle,setBundle] = useState({
         complete:0,
@@ -33,10 +31,13 @@ const Calendar = () => {
     }, [tasks]);
 
     const addTask = async () => {
-        if(user){
         if (newTask.trim() !== "" && newTaskDateTime.trim() !== "") {
             try {
-                const response = await axios.post(`${Baseurl}api/users/addmedicine`, { userId: userId, task: newTask, dateTime: newTaskDateTime })
+                const response = await axios.post(`${Baseurl}/api/users/addmedicine`, { task: newTask, dateTime: newTaskDateTime },{
+                    headers: {
+                        'auth-token': `${localStorage.getItem('auth-token')}`,
+                        'Content-Type': 'application/json',
+                    },});
                 setTasks(response.data.updated_user.addmedicine);
                 const taskData = response.data.updated_user.task;
                 
@@ -52,14 +53,7 @@ const Calendar = () => {
             setNewTask("");
             setNewTaskDateTime("");
         }
-}else{
-    Swal.fire({
-        title: "Error",
-        text:'SignIn first',
-        icon: "error",
-      });
 }
-    };
 
     const removeTask = async (index,task) => {
         const audio = audioRef.current;
@@ -68,8 +62,11 @@ const Calendar = () => {
         try {
             console.log('delete');
             console.log(index);
-            const response = await axios.delete(`${Baseurl}api/users/deletemedicine/${userId}/${index}/${task}`
-            )
+            const response = await axios.delete(`${Baseurl}/api/users/deletemedicine/${index}/${task}`,{
+                headers: {
+                    'auth-token': `${localStorage.getItem('auth-token')}`,
+                    'Content-Type': 'application/json',
+                },});
             console.log(response.data);
             setTasks(response.data.user.addmedicine);
             const taskData = response.data.user.task;
@@ -114,23 +111,32 @@ const Calendar = () => {
         }
     };
     const fetchData = async () => {
-        if (userId) {
-            console.log(userId);
-            try {
-                const response = await axios.get(`${Baseurl}api/users/getmedicine/${userId}`)
-                console.log(response.data);
-                setTasks(response.data.addmedicine);
-                const taskData = response.data.task;
-                setBundle({
+        try {
+            // Ensure the URL is correctly constructed
+            const url = `${Baseurl}/api/users/getmedicine`;
+            console.log('Fetching data from:', url);
+    
+            const response = await axios.get(url, {
+                headers: {
+                    'auth-token': localStorage.getItem('auth-token'),
+                    'Content-Type': 'application/json',
+                },
+            });
+            
+            console.log(response.data);
+            setTasks(response.data.addmedicine);
+            
+            const taskData = response.data.task;
+            setBundle({
                 complete: taskData.complete,
                 remove: taskData.remove,
                 swap: taskData.snooze,
-                });
-            } catch (err) {
-                console.log('error in getmedicine frontend side', err);
-            }
+            });
+        } catch (err) {
+            console.error('Error in getmedicine frontend side', err);
         }
-    }
+    };
+    
     useEffect(() => {
         fetchData();
     }, [])
@@ -159,7 +165,11 @@ const Calendar = () => {
         audio.pause();
         audio.currentTime = 0;
         try {
-            const response = await axios.put(`${Baseurl}api/users/updatemedicine/${userId}`, {index:alarmTaskIndex, dateTime: snoozeTimeInput})
+            const response = await axios.put(`${Baseurl}/api/users/updatemedicine`, {index:alarmTaskIndex, dateTime: snoozeTimeInput},{
+                headers: {
+                    'auth-token': `${localStorage.getItem('auth-token')}`,
+                    'Content-Type': 'application/json',
+                },});
             setTasks(response.data.updated_user.addmedicine);
         } catch (err) {
             console.log(err);
@@ -169,8 +179,9 @@ const Calendar = () => {
 
     return (
 
-        <div className="bg-green-100 h-screen p-12">
-            <div className="medicalnote flex flex-col items-center">
+        <div className="bg-green-100 h-screen">
+            <Navbar/>
+            <div className="medicalnote flex flex-col items-center p-12 ">
                 <div className="input-container flex flex-col space-y-2  justify-between items-center mb-5 w-3/4">
                     <div className="flex">
                     <input
@@ -187,7 +198,7 @@ const Calendar = () => {
                         className="w-1/4 p-2 border border-gray-300 rounded"
                     /></div>
                     <button
-                        onClick={isAuthenticated?addTask:() => loginWithRedirect()}
+                        onClick={addTask}
                         className="p-2 bg-green-blue w-44 font-bold text-white rounded hover:bg-green-800 transition duration-300"
                     >
                         Add
@@ -251,7 +262,10 @@ const Calendar = () => {
                 )}
                 <audio ref={audioRef} src="alarm.mp3" preload="auto" />
             </div>
+            <div className="p-12">
             <Chart complete={bundle.complete} remove={bundle.remove} swap={bundle.swap} />
+            </div>
+            
         </div>
     );
 }

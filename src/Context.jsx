@@ -1,6 +1,5 @@
 import React,{createContext,useState,useEffect} from 'react';
 import Allproduct from './Component/Allproduct';
-import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios'
 
 const CartContext = createContext();
@@ -21,68 +20,87 @@ const getDefaultFav = () => {
 }
 const Baseurl=import.meta.env.VITE_API_BASE_URL;
 const CartProvider = ({children})=>{
-    const { user } = useAuth0();
     const [cart,setCart] = useState(getDefaultCart());
     const [favourite,setFavourite] = useState(getDefaultFav());
     const addbtn = async(index) => {
       console.log('fafjaa;faf',index);
-      if(user){
+      
         try{
-          const data = await axios.post(`${Baseurl}/api/users/addproduct`,{index:index,userId:user.sub})
+          const data = await axios.post(`${Baseurl}/api/users/addproduct`,{index:index},{
+            headers: {
+                'auth-token': `${localStorage.getItem('auth-token')}`,
+                'Content-Type': 'application/json',
+            },})
           console.log(data.data.cart);
           setCart(data.data.cart);
         }catch(err){
           console.log('err in addproduct f',err);
-        }}
+        }
     }
     const removebtn = async(index) => {
       console.log('fafjaa;faf',index);
-      if(user){
+      
         try{
-          const data = await axios.post(`${Baseurl}/api/users/removeproduct`,{index:index,userId:user.sub})
+          const data = await axios.post(`${Baseurl}/api/users/removeproduct`,{index:index},{
+            headers: {
+                'auth-token': `${localStorage.getItem('auth-token')}`,
+                'Content-Type': 'application/json',
+            },});
           console.log(data.data.cart);
           setCart(data.data.cart);
         }catch(err){
           console.log('err in remove product f',err);
-        }}
+        }
     }
     const getproduct = async () => {
-      if (user) {
+     
           try {
-              const { data } = await axios.get(`${Baseurl}/api/users/getproduct/${user.sub}`);
+              const { data } = await axios.get(`${Baseurl}/api/users/getproduct`,{
+                headers: {
+                    'auth-token': `${localStorage.getItem('auth-token')}`,
+                    'Content-Type': 'application/json',
+                },});
               setCart(data.cart);
               setFavourite(data.favourite);
           } catch (err) {
               console.log('Error in getproduct:', err);
           }
-      }
+      
   };
   useEffect(() => {
-    if (user) {
+   
       getproduct();
-    }
-  }, [user]);
+    
+  }, []);
 
     const favbtn=async(index)=>{
-      if(user){
+      
         try{
-          const data = await axios.post(`${Baseurl}/api/users/favproduct`,{index:index,userId:user.sub})
+          const data = await axios.post(`${Baseurl}/api/users/favproduct`,{index:index},{
+                    headers: {
+                        'auth-token': `${localStorage.getItem('auth-token')}`,
+                        'Content-Type': 'application/json',
+                    },})
           console.log(data.data);
           setFavourite(data.data.favourite);
         }catch(err){
           console.log('err in addproduct f',err);
-        }}
+        }
     }
     const nonfavbtn = async(index) => {
       console.log('fafjaa;faf',index);
-      if(user){
+      
         try{
-          const data = await axios.post(`${Baseurl}/api/users/nonfavproduct`,{index:index,userId:user.sub})
+          const data = await axios.post(`${Baseurl}/api/users/nonfavproduct`,{index:index},{
+                    headers: {
+                        'auth-token': `${localStorage.getItem('auth-token')}`,
+                        'Content-Type': 'application/json',
+                    },})
           console.log(data.data.cart);
           setFavourite(data.data.favourite);
         }catch(err){
           console.log('err in remove product f',err);
-        }}
+        }
     }
 
 

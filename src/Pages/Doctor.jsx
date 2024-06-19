@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { useAuth0 } from '@auth0/auth0-react';
-import NavigationIcon from '@mui/icons-material/Navigation';
+import Navbar from '../Component/Navbar';
+import Message from '../Component/Message';
 const Doctor = () => {
   const { id } = useParams();
   const [item, setItem] = useState([]);
   const [showPopup, setShowPopup] = useState(false);
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const { user } = useAuth0();
   const Baseurl = import.meta.env.VITE_API_BASE_URL;
 
   const handleDateChange = (event) => {
@@ -27,8 +26,12 @@ const Doctor = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${Baseurl}/api/doctor/listdoctor`);
-        console.log(response);
+        const response = await axios.get(`${Baseurl}/api/doctor/listdoctor`,{
+          headers: {
+              'auth-token': `${localStorage.getItem('auth-token')}`,
+              'Content-Type': 'application/json',
+          },});
+       // console.log(response);
         setItem(response.data[id]);
       } catch (err) {
         console.log(err);
@@ -42,12 +45,15 @@ const Doctor = () => {
     try {
       const data = await axios.post(`${Baseurl}/api/doctor/handlemeeting`, {
         doctorId: item._id,
-        userId: user.sub,
         date: date,
         time: time,
-      });
-      console.log(data.data);
-    } catch (err) {
+      },{
+        headers: {
+            'auth-token': `${localStorage.getItem('auth-token')}`,
+            'Content-Type': 'application/json',
+        },});
+     // console.log(data.data);
+    } catch (err) {+
       console.log('error in doctor frontend', err);
     }
   };
@@ -62,8 +68,10 @@ const Doctor = () => {
 
   const minDate = getCurrentDate();
 
-  console.log(item);
+ // console.log(item);
   return (
+    <div>
+      <Navbar/>
     <div className="p-8 flex h-screen lg:p-24 space-x-12">
       <div className="flex flex-col flex-grow basis-2/3 space-y-8">
         <div className="flex items-center space-x-8">
@@ -119,19 +127,8 @@ const Doctor = () => {
           </p>
         </div>
       </div>
-      <div className="border  border-gray-300 flex-grow basis-1/3 p-4 flex flex-col justify-end">
-        <div>
-          <div>
-
-          </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          <input className="p-2 rounded-lg flex-grow bg-gray-100" placeholder="Enter the message ..." />
-          <div className="bg-green-500 rounded-full rotate-90 p-1 flex items-center justify-center">
-            <NavigationIcon style={{ color: "white" }} />
-          </div>
-        </div>
-      </div>
+      <Message Id={item._id}/>
+    </div>
     </div>
   );
 };

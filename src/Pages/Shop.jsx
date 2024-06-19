@@ -2,13 +2,16 @@ import React,{useState,useEffect, useContext} from 'react'
 import ImageCarousel from '../Component/ImageCarousel'
 import CartCard from '../Component/CartCard'
 import { CartContext } from '../Context';
+import Navbar from '../Component/Navbar';
 
 const Shop = () => {
 
   const {addbtn,Allproduct,removebtn,favbtn,nonfavbtn,cart,favourite} = useContext(CartContext)
  
   return (
-    <div className="my-16 flex flex-col space-y-8 items-center h-screen">
+    <div>
+      <Navbar/>
+    <div className="my-8 flex flex-col space-y-8 items-center h-screen">
       <div className="p-4">
         <ImageCarousel />
       </div>
@@ -19,6 +22,7 @@ const Shop = () => {
           </div>)
         })}
       </div>
+    </div>
     </div>
   )
 }

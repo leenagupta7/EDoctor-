@@ -2,38 +2,48 @@ import { useAuth0 } from '@auth0/auth0-react';
 import axios from 'axios';
 import React,{useEffect, useState} from 'react'
 import ClearIcon from '@mui/icons-material/Clear';
+import Navbar from '../Component/Navbar';
 
 const Meeting = () => {
     const [meeting,setMeeting] = useState([]);
-    const {user} = useAuth0();
+  
     const Baseurl=import.meta.env.VITE_API_BASE_URL;
     const fetchMeeting = async() => {
-        if(user){
-            const userId = user?.sub;
+        
             try{
-                const data =await axios.get(`${Baseurl}/api/users/getmeeting/${userId} `)
+                const data =await axios.get(`${Baseurl}/api/users/getmeeting`,{
+                    headers: {
+                        'auth-token': `${localStorage.getItem('auth-token')}`,
+                        'Content-Type': 'application/json',
+                    },})
                 console.log(data);
                 setMeeting(data.data.meeting);
                 console.log(data.data.meeting);
             }catch(err){
                 console.log('error in fetchmeeting frontend');
             }
-        }
+        
     }
     useEffect(()=>{
         fetchMeeting();
     },[])
     const removebtn=async(index,doctorId)=>{
-        if(user){
+        
             try{
-                const data = await axios.delete(`${Baseurl}/api/users/deletemeeting/${index}/${doctorId}/${user.sub}`)
+                const data = await axios.delete(`${Baseurl}/api/users/deletemeeting/${index}/${doctorId}`,{
+                    headers: {
+                        'auth-token': `${localStorage.getItem('auth-token')}`,
+                        'Content-Type': 'application/json',
+                    },})
                 fetchMeeting();
             }catch(err){
                 console.log(err);
             }
-        }
+        
     }
   return (
+    <div>
+        <Navbar/>
     <div className="mt-24 mx-36">
     <div className="grid grid-cols-7 gap-8 items-center py-2 text-gray-700 text-sm font-semibold">
         <p>Sr.No</p>
@@ -62,7 +72,7 @@ const Meeting = () => {
                 )
         })}
    
-    </div>
+    </div> </div>
   )
 }
 

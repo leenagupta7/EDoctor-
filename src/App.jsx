@@ -12,6 +12,7 @@ import AddDoctor from './Pages/AddDoctor'
 import DoctorList from './Pages/DoctorList'
 import Doctor from './Pages/Doctor'
 import Meeting from './Pages/Meeting'
+import Login from './Pages/Login'
 
 
 const App = () => {
@@ -19,9 +20,9 @@ const App = () => {
     <div>
 
       <BrowserRouter>
-        <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login/>} />
           <Route path="/addcontact" element={<AddContact />} ></Route>
           <Route path="/calendar" element={<Calendar />} ></Route>
           <Route path="/shop" element={<Shop />} ></Route>

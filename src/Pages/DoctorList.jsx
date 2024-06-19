@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import Navbar from '../Component/Navbar';
 
 const DoctorList = () => {
   const [Doctor, SetDoctor] = useState([]);
@@ -9,7 +10,7 @@ const DoctorList = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${Baseurl}/api/doctor/listdoctor`)
-        console.log(response);
+        //console.log(response);
         SetDoctor(response.data);
       } catch (err) {
         console.log(err);
@@ -19,11 +20,13 @@ const DoctorList = () => {
   }, [])
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="flex justify-center items-center h-screen grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div>
+      <Navbar/>
+    <div className="flex h-screen">
+      <div className="flex p-12 h-screen grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {
           Doctor.map((item, index) => (
-            <Link key={index} to={`/doctor/${index}`}><div key={index} className="shadow-md py-12 px-4 flex flex-col items-center w-96 space-y-8 ">
+            <Link key={index} to={`/doctor/${index}`}><div key={index} className="shadow-md py-4 px-4 flex flex-col items-center w-84 space-y-8 ">
               <div className="flex items-center">
                 <img className="rounded-full h-56 w-56" src={item.image} alt="" />
               </div>
@@ -49,6 +52,7 @@ const DoctorList = () => {
           ))
         }
       </div>
+    </div>
     </div>
   )
 }
