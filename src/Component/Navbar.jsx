@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { useAuth0 } from "@auth0/auth0-react";
 import axios from 'axios';
 import Swal from "sweetalert2";
 import UserAvatar from "../images/user-avatar-32.png";
@@ -8,22 +7,26 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import { styled } from '@mui/material/styles';
 import { CartContext } from '../Context';
 import Edoctorlogo from '../images/Edoctorlogo.webp';
-import AddDoctor from '../Pages/AddDoctor';
-
+import { useNavigate } from 'react-router-dom';
+import { useAuthContext } from '../AuthContext';
 const StyledShoppingCartOutlinedIcon = styled(ShoppingCartOutlinedIcon)(({ theme }) => ({
   color: 'grey'
 }));
-const Baseurl=import.meta.env.VITE_API_BASE_URL;
+const Baseurl = import.meta.env.VITE_API_BASE_URL;
 function Navbar() {
+  const navigate = useNavigate();
   const { getTotalCartItem } = useContext(CartContext);
   const [open, setOpen] = useState(false);
   const [userpic, setUserpic] = useState(null);
   const fileInput = useRef(null);
+  const user = localStorage.getItem('user');
+  const { setAuthUser } = useAuthContext();
 
+  console.log(user);
   useEffect(() => {
     fetchUserProfile();
   }, []);
- 
+
   const handleDropDownMenu = () => {
     setOpen(!open);
   };
@@ -36,11 +39,11 @@ function Navbar() {
     if (!event || !event.target || !event.target.files || event.target.files.length === 0) {
       return; // Do nothing if event or files are not available
     }
-    
+
     const file = event.target.files[0];
     const formData = new FormData();
     formData.append("file", file);
-    
+
     try {
       const response = await axios.post(
         `${Baseurl}/api/users/updateProfile`,
@@ -75,18 +78,20 @@ function Navbar() {
   };
 
   const fetchUserProfile = async () => {
+    if(user=="User"){
     try {
-      const response = await axios.get(`${Baseurl}/api/users/getProfile`,{
+      const response = await axios.get(`${Baseurl}/api/users/getProfile`, {
         headers: {
-            'auth-token': `${localStorage.getItem('auth-token')}`,
-            'Content-Type': 'application/json',
-        },});
+          'auth-token': `${localStorage.getItem('auth-token')}`,
+          'Content-Type': 'application/json',
+        },
+      });
       if (response.data.user[0] && response.data.user[0].picture) {
         setUserpic(response.data.user[0].picture);
       }
     } catch (err) {
       console.log(err);
-    }
+    }}
   };
 
   return (
@@ -99,10 +104,14 @@ function Navbar() {
             </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4">
-                <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/addcontact'>Add Contact</Link>
-                <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/calendar'>Calendar</Link>
-                <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/shop'>Shop</Link>
-                <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/doctorlist'>Doctor</Link>
+              {user === "User" ? (<Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/addcontact'>Add Contact</Link>):(<></>)}
+               {user === "User" ? (<Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/calendar'>Calendar</Link>):(<></>)}
+               {user === "User" ? (<Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/shop'>Shop</Link>):(<></>)}
+                {user === "User" ? (
+                  <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/doctorlist'>Doctor</Link>
+                ) : (
+                  <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/patientlist'>Patient</Link>
+                )}
                 <Link className="text-green-blue hover:bg-white-500 hover:text-green-800 rounded-md px-3 py-2 text-sm font-medium" to='/meetinglist'>Meeting</Link>
               </div>
             </div>
@@ -123,7 +132,7 @@ function Navbar() {
                     <span className="absolute -inset-1.5"></span>
                     <span className="sr-only">Open user menu</span>
                     <img className="h-8 w-8 rounded-full" src={
-                     userpic?userpic:UserAvatar
+                      userpic ? userpic : UserAvatar
                     } alt="" />
                   </button>
                 </div>
@@ -138,12 +147,13 @@ function Navbar() {
                   <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
                     <button onClick={handleUpdateProfileClick} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-0">Your Profile</button>
                     <button className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-1">Contact us</button>
-                    
-                      <button onClick={() => {
-                        localStorage.removeItem('auth-token');
-                        getUser();
-                        navigate('/login');
-                      }} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-2">Sign out</button>
+
+                    <button onClick={() => {
+                      localStorage.removeItem('auth-token');
+                      localStorage.removeItem('user');
+                      setAuthUser(null)
+                      navigate('/login');
+                    }} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-2">Sign out</button>
                   </div>
                 )}
               </div>

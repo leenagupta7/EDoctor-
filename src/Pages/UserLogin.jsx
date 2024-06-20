@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useAuthContext } from "../AuthContext";
 
 const Baseurl = import.meta.env.VITE_API_BASE_URL;
 const UserLogin = () => {
@@ -10,6 +11,7 @@ const UserLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { setAuthUser } = useAuthContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,10 +52,13 @@ const UserLogin = () => {
       });
 
       const responseData = response.data;
-      // console.log(responseData);
+      console.log('hey',responseData);
       if (responseData.success) {
         localStorage.clear();
+        setAuthUser(responseData);
         localStorage.setItem('auth-token', responseData.token);
+        localStorage.setItem('user',"User");
+        localStorage.setItem('Id',responseData.data.user.id);
         Swal.fire({
           title: 'Success!',
           text: underline ? 'You have successfully signed up!' : 'You have successfully logged in!',

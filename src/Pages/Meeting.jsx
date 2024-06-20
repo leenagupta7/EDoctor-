@@ -9,7 +9,8 @@ const Meeting = () => {
   
     const Baseurl=import.meta.env.VITE_API_BASE_URL;
     const fetchMeeting = async() => {
-        
+        const data = localStorage.getItem('user');
+        if(data==='User'){
             try{
                 const data =await axios.get(`${Baseurl}/api/users/getmeeting`,{
                     headers: {
@@ -22,7 +23,7 @@ const Meeting = () => {
             }catch(err){
                 console.log('error in fetchmeeting frontend');
             }
-        
+        }
     }
     useEffect(()=>{
         fetchMeeting();

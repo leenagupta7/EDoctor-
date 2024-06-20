@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { useAuthContext } from "../AuthContext";
+
 
 const AddDoctor = () => {
   const navigate = useNavigate();
@@ -18,6 +20,7 @@ const AddDoctor = () => {
 
   const Baseurl = import.meta.env.VITE_API_BASE_URL;
   const PASSWORD = import.meta.env.VITE_PASSWORD;
+  const { setAuthUser } = useAuthContext();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -70,7 +73,10 @@ const AddDoctor = () => {
         file: null,
       });
       localStorage.clear();
+      setAuthUser(response.data);
       localStorage.setItem('auth-token', response.data.token);
+      localStorage.setItem('user',"Doctor");
+      localStorage.setItem('Id',response.data.data.user.id)
       navigate('/');
     } catch (error) {
       console.error('Error submitting form:', error);

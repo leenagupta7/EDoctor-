@@ -53,7 +53,8 @@ const CartProvider = ({children})=>{
         }
     }
     const getproduct = async () => {
-     
+          const data = localStorage.getItem('user');
+          if(data==='User'){
           try {
               const { data } = await axios.get(`${Baseurl}/api/users/getproduct`,{
                 headers: {
@@ -65,7 +66,7 @@ const CartProvider = ({children})=>{
           } catch (err) {
               console.log('Error in getproduct:', err);
           }
-      
+      }
   };
   useEffect(() => {
    

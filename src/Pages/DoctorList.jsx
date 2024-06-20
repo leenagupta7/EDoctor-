@@ -10,7 +10,6 @@ const DoctorList = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${Baseurl}/api/doctor/listdoctor`)
-        //console.log(response);
         SetDoctor(response.data);
       } catch (err) {
         console.log(err);
@@ -18,7 +17,18 @@ const DoctorList = () => {
     }
     fetchData();
   }, [])
-
+  const BookDoctor = async(id) => {
+    try{
+      const response = await axios.post(`${Baseurl}/api/doctor/bookdoctor`,{doctorId:id},{
+        headers: {
+            'auth-token': `${localStorage.getItem('auth-token')}`,
+            'Content-Type': 'application/json',
+        },});
+      console.log(response);
+    }catch(err){
+      console.log('err in bookdoctor frontend',err);
+    }
+  }
   return (
     <div>
       <Navbar/>
@@ -26,11 +36,12 @@ const DoctorList = () => {
       <div className="flex p-12 h-screen grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {
           Doctor.map((item, index) => (
-            <Link key={index} to={`/doctor/${index}`}><div key={index} className="shadow-md py-4 px-4 flex flex-col items-center w-84 space-y-8 ">
+            <div key={index} ><div key={index} className="shadow-md py-4 px-4 flex flex-col items-center w-84 space-y-8 ">
               <div className="flex items-center">
                 <img className="rounded-full h-56 w-56" src={item.image} alt="" />
               </div>
               <div className="w-96 p-4">
+                <p>{item.email}</p>
                 <div className="flex justify-between">
                   <span>Name</span>
                   <span>{item.name}</span>
@@ -47,10 +58,16 @@ const DoctorList = () => {
                   <span>Experience</span>
                   <span>{item.experience} years</span>
                 </div>
+                <Link to={`/doctor/${index}`} className="cursor-pointer flex flex-col items-center justify-between pt-4" onClick={() => BookDoctor(item._id)}>
+                  <div >
+                    <span className="bg-blue-500 p-2 rounded-md font-bold text-white">Book Doctor</span>
+                </div>
+                </Link>
               </div>
-            </div></Link>
+            </div></div>
           ))
         }
+        {/* //Link to={`/doctor/${index}`} */}
       </div>
     </div>
     </div>
