@@ -2,10 +2,13 @@ import React, { useContext } from 'react'
 import emptycart from '../images/emptycart.svg'
 import { Link } from 'react-router-dom'
 import { CartContext } from '../Context';
+import Navbar from './Navbar';
 
 const EmptyCart = () => {
     const { favourite, Allproduct } = useContext(CartContext);
     return (
+        <div>
+            <Navbar/>
         <div className="flex flex-col bg-green-100 h-screen p-12 space-y-20">
             <span className="text-2xl">My Cart</span>
             <div className="flex flex-col items-center justify-center space-y-4">
@@ -33,6 +36,7 @@ const EmptyCart = () => {
                     </div>
                 ))}
             </div>
+        </div>
         </div>
     )
 }

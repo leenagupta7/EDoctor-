@@ -20,9 +20,8 @@ function Navbar() {
   const [userpic, setUserpic] = useState(null);
   const fileInput = useRef(null);
   const user = localStorage.getItem('user');
-  const { setAuthUser } = useAuthContext();
-
-  console.log(user);
+  const { authUser,setAuthUser } = useAuthContext();
+  
   useEffect(() => {
     fetchUserProfile();
   }, []);
@@ -78,7 +77,7 @@ function Navbar() {
   };
 
   const fetchUserProfile = async () => {
-    if(user=="User"){
+    if(authUser && user=="User"){
     try {
       const response = await axios.get(`${Baseurl}/api/users/getProfile`, {
         headers: {
@@ -117,14 +116,14 @@ function Navbar() {
             </div>
           </div>
           <div className="flex space-x-2 items-center">
-            <Link to="/cart">
+          {user === "User" ?(<Link to="/cart">
               <div className="relative inline-block">
                 <div className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1 rounded-full bg-red-500 h-4 w-4 flex items-center justify-center">
                   <span className="text-white text-xs">{getTotalCartItem()}</span>
                 </div>
                 <StyledShoppingCartOutlinedIcon />
               </div>
-            </Link>
+            </Link>):(<></>)}
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
               <div onClick={handleDropDownMenu} className="relative ml-3">
                 <div>
@@ -145,7 +144,7 @@ function Navbar() {
                 />
                 {open && (
                   <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabIndex="-1">
-                    <button onClick={handleUpdateProfileClick} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-0">Your Profile</button>
+                    {user==="User"?(<button onClick={handleUpdateProfileClick} className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-0">Your Profile</button>):(<></>)}
                     <button className="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabIndex="-1" id="user-menu-item-1">Contact us</button>
 
                     <button onClick={() => {

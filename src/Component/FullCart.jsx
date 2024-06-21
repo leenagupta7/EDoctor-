@@ -3,6 +3,7 @@ import { CartContext } from '../Context'
 import ClearIcon from '@mui/icons-material/Clear';
 import axios from 'axios';
 import {loadStripe} from '@stripe/stripe-js';
+import Navbar from './Navbar';
 
 const FullCart = () => {
   const {cart,removebtn,getTotalCartAmount,Allproduct}=useContext(CartContext);
@@ -23,6 +24,8 @@ const FullCart = () => {
     }
 };
   return (
+    <div>
+        <Navbar/>
     <div className="mt-24 mx-44">
         <div className="grid grid-cols-6 gap-8 items-center py-2 text-gray-700 text-sm font-semibold">
             <p>Products</p>
@@ -73,6 +76,7 @@ const FullCart = () => {
                 <button onClick={makePayment} className="w-64 h-14 bg-red-500 text-white text-sm font-semibold">PROCEED TO CHECKOUT</button>
             </div>
         </div>
+    </div>
     </div>
 )
 }

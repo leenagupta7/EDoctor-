@@ -3,16 +3,18 @@ import axios from 'axios';
 import React,{useEffect, useState} from 'react'
 import ClearIcon from '@mui/icons-material/Clear';
 import Navbar from '../Component/Navbar';
+import { useAuthContext } from '../AuthContext';
 
 const Meeting = () => {
     const [meeting,setMeeting] = useState([]);
-  
+    const {authUser} = useAuthContext();
     const Baseurl=import.meta.env.VITE_API_BASE_URL;
     const fetchMeeting = async() => {
-        const data = localStorage.getItem('user');
-        if(data==='User'){
+        const user = localStorage.getItem('user');
+        if(authUser){
             try{
-                const data =await axios.get(`${Baseurl}/api/users/getmeeting`,{
+                let chooseUser = (user === 'User') ? 'users' : 'doctor';
+                const data =await axios.get(`${Baseurl}/api/${chooseUser}/getmeeting`,{
                     headers: {
                         'auth-token': `${localStorage.getItem('auth-token')}`,
                         'Content-Type': 'application/json',
@@ -28,10 +30,13 @@ const Meeting = () => {
     useEffect(()=>{
         fetchMeeting();
     },[])
-    const removebtn=async(index,doctorId)=>{
-        
+    const removebtn=async(index,doctorId,patientId)=>{
+            const user = localStorage.getItem('user');
+            const id = (user==='User')?doctorId:patientId;
+
             try{
-                const data = await axios.delete(`${Baseurl}/api/users/deletemeeting/${index}/${doctorId}`,{
+                let chooseUser = (user === 'User') ? 'users' : 'doctor';
+                const data = await axios.delete(`${Baseurl}/api/${chooseUser}/deletemeeting/${index}/${id}`,{
                     headers: {
                         'auth-token': `${localStorage.getItem('auth-token')}`,
                         'Content-Type': 'application/json',
@@ -65,7 +70,7 @@ const Meeting = () => {
                             <p>{e.patientname}</p>
                             <p>{e.date.split('T00:00:00.000Z')}</p>
                             <p>{e.time}</p>
-                            <ClearIcon className="w-4 cursor-pointer" onClick={() => { removebtn(index,e.doctorId) }}/>
+                            <ClearIcon className="w-4 cursor-pointer" onClick={() => { removebtn(index,e.doctorId,e.patientId) }}/>
                             <button className="bg-blue-400 text-white p-2 rounded-xl">Join</button>
                         </div>
                         <hr className="h-1 bg-gray-200 border-0" />

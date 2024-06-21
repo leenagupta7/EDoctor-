@@ -3,6 +3,8 @@ import axios from 'axios';
 import Chart from "../Component/Chart";
 import Swal from "sweetalert2";
 import Navbar from "../Component/Navbar";
+import { useAuthContext } from "../AuthContext";
+
 const Calendar = () => {
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState("");
@@ -19,7 +21,7 @@ const Calendar = () => {
         remove:0,
         swap:0
     })
-
+    const {authUser} = useAuthContext();
     useEffect(() => {
         const timer = setInterval(() => {
             checkTasksDue();
@@ -29,7 +31,32 @@ const Calendar = () => {
             clearInterval(timer);
         };
     }, [tasks]);
-
+    const fetchData = async () => {
+        if(authUser){
+            try {
+                const url = `${Baseurl}/api/users/getmedicine`;
+                const response = await axios.get(url, {
+                    headers: {
+                        'auth-token': localStorage.getItem('auth-token'),
+                        'Content-Type': 'application/json',
+                    },
+                });
+                setTasks(response.data.addmedicine);
+                const taskData = response.data.task;
+                setBundle({
+                    complete: taskData.complete,
+                    remove: taskData.remove,
+                    swap: taskData.snooze,
+                });
+            } catch (err) {
+                console.error('Error in getmedicine frontend side', err);
+            }
+        }
+    };
+    
+    useEffect(() => {
+        fetchData();
+    }, [])
     const addTask = async () => {
         if (newTask.trim() !== "" && newTaskDateTime.trim() !== "") {
             try {
@@ -38,8 +65,8 @@ const Calendar = () => {
                         'auth-token': `${localStorage.getItem('auth-token')}`,
                         'Content-Type': 'application/json',
                     },});
-                setTasks(response.data.updated_user.addmedicine);
-                const taskData = response.data.updated_user.task;
+                setTasks(response.data.new_user.addmedicine);
+                const taskData = response.data.new_user.task;
                 
                 setBundle({
                   complete: taskData.complete,
@@ -47,6 +74,7 @@ const Calendar = () => {
                   swap: taskData.snooze,
                 });
                 console.log('bundle',bundle);
+                fetchData();
             } catch (err) {
                 console.log(err);
             }
@@ -75,6 +103,7 @@ const Calendar = () => {
               remove: taskData.remove,
               swap: taskData.snooze,
             });
+            fetchData();
         } catch (err) {
             console.log(err);
         }
@@ -110,52 +139,11 @@ const Calendar = () => {
             setSnoozeTime(null); // Reset snooze time
         }
     };
-    const fetchData = async () => {
-        try {
-            // Ensure the URL is correctly constructed
-            const url = `${Baseurl}/api/users/getmedicine`;
-            console.log('Fetching data from:', url);
-    
-            const response = await axios.get(url, {
-                headers: {
-                    'auth-token': localStorage.getItem('auth-token'),
-                    'Content-Type': 'application/json',
-                },
-            });
-            
-            console.log(response.data);
-            setTasks(response.data.addmedicine);
-            
-            const taskData = response.data.task;
-            setBundle({
-                complete: taskData.complete,
-                remove: taskData.remove,
-                swap: taskData.snooze,
-            });
-        } catch (err) {
-            console.error('Error in getmedicine frontend side', err);
-        }
-    };
-    
-    useEffect(() => {
-        fetchData();
-    }, [])
+  
     const playSound = () => {
         const audio = audioRef.current;
         audio.play();
     };
-
-    // const stopAlarm = () => {
-    //     const audio = audioRef.current;
-    //     audio.pause();
-    //     audio.currentTime = 0;
-    //     setIsAlarmPlaying(false);
-
-    //     if (alarmTaskIndex !== null) {
-    //         removeTask(alarmTaskIndex);
-    //         setAlarmTaskIndex(null);
-    //     }
-    // };
 
     const snoozeAlarm = async() => {
         const newSnoozeTime = new Date(snoozeTimeInput).getTime();
@@ -171,6 +159,7 @@ const Calendar = () => {
                     'Content-Type': 'application/json',
                 },});
             setTasks(response.data.updated_user.addmedicine);
+            fetchData();
         } catch (err) {
             console.log(err);
         }

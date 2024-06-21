@@ -43,7 +43,7 @@ const Doctor = () => {
   const handleAddMeeting = async () => {
     togglePopup();
     try {
-      const data = await axios.post(`${Baseurl}/api/doctor/handlemeeting`, {
+      const data = await axios.post(`${Baseurl}/api/users/handlemeeting`, {
         doctorId: item._id,
         date: date,
         time: time,
@@ -83,7 +83,7 @@ const Doctor = () => {
             <span className="text-3xl">Doctor {item.name}</span>
             <button onClick={togglePopup} className="border border-white p-2 rounded bg-red-500 text-white font-bold">Schedule Meeting</button>
             {showPopup && (
-              <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              <div className="z-50 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 <div className="bg-white p-8 rounded-lg shadow-lg relative w-96 h-auto">
                   <button
                     onClick={togglePopup}
