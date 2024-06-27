@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Navbar from '../Component/Navbar';
 import axios from 'axios';
 import Message from '../Component/Message';
+import Chart from "../Component/Chart";
+import { CartContext } from '../Context';
 
 const Patient = () => {
+  const {Allproduct,cart} = useContext(CartContext);
   const Baseurl = import.meta.env.VITE_API_BASE_URL;
   const [patients, setPatients] = useState([]);
   const [selectedUser, setSelectedUser] = useState('');
@@ -61,16 +64,43 @@ const Patient = () => {
         </div>
         <div className="border p-12">
           {selectedUser ? (
-            <div className="flex">
-              <div className=" border flex flex-col">
-                <div className="space-x-12">
-                  <span>Name</span>
-                  <span>{patients[index].name}</span>
+            <div className="flex gap-8">
+              <div className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2 p-4 border rounded-xl">
+                  <h1 className="text-xl font-bold">Info</h1>
+                  <div className="space-x-12">
+                    <span>Name</span>
+                    <span>{patients[index].name}</span>
+                  </div>
+                  <div className="space-x-12" s>
+                    <span>Email</span>
+                    <span>{patients[index].email}</span>
+                  </div>
                 </div>
-                <div className="space-x-12"s>
-                  <span>Email</span>
-                  <span>{patients[index].email}</span>
+                <div className="flex flex-col gap-2 p-4 border rounded-xl">
+                <h1 className="text-xl font-bold">Graph</h1>
+                <Chart complete={patients[index].task.complete} remove={patients[index].task.remove} swap={patients[index].task.swap} />
                 </div>
+              </div>
+              <div className="flex flex-col gap-2 p-4 border rounded-xl">
+              <h1 className="text-xl font-bold">Cart</h1>
+              {Allproduct.map((e, idx) => {
+                  if (patients[index].cart[idx] > 0) {
+                    return (
+                      <div key={idx}>
+                        <div className="grid grid-cols-6 gap-2 items-center py-2 text-gray-700 text-sm font-medium">
+                          <img src={e.image} alt={e.name} className="h-12" />
+                          <p>{e.name}</p>
+                          <p>${e.newprice}</p>
+                          <button className="w-12 h-12 border-2 border-gray-200 bg-white">{patients[index].cart[idx]}</button>
+                          <p>${e.newprice * patients[index].cart[idx]}</p>
+                        </div>
+                        <hr className="h-1 bg-gray-200 border-0" />
+                      </div>
+                    );
+                  }
+                  return null;
+                })}
               </div>
               <Message Id={selectedUser} />
             </div>
