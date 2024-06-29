@@ -50,7 +50,7 @@ const Meeting = () => {
   return (
     <div>
         <Navbar/>
-    <div className="mt-24 mx-36">
+    <div className="m-12 md:mt-24 md:mx-36">
     <div className="grid grid-cols-7 gap-8 items-center py-2 text-gray-700 text-sm font-semibold">
         <p>Sr.No</p>
         <p>Doctor</p>

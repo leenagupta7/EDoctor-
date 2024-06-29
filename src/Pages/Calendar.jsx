@@ -15,13 +15,14 @@ const Calendar = () => {
     const audioRef = useRef(null);
     const [snoozeTimeInput, setSnoozeTimeInput] = useState("");
     const [showSnoozeTimeInput, setShowSnoozeTimeInput] = useState(false);
-    const Baseurl=import.meta.env.VITE_API_BASE_URL;
-    const [bundle,setBundle] = useState({
-        complete:0,
-        remove:0,
-        swap:0
-    })
-    const {authUser} = useAuthContext();
+    const Baseurl = import.meta.env.VITE_API_BASE_URL;
+    const [bundle, setBundle] = useState({
+        complete: 0,
+        remove: 0,
+        swap: 0
+    });
+    const { authUser } = useAuthContext();
+
     useEffect(() => {
         const timer = setInterval(() => {
             checkTasksDue();
@@ -31,8 +32,9 @@ const Calendar = () => {
             clearInterval(timer);
         };
     }, [tasks]);
+
     const fetchData = async () => {
-        if(authUser){
+        if (authUser) {
             try {
                 const url = `${Baseurl}/api/users/getmedicine`;
                 const response = await axios.get(url, {
@@ -53,27 +55,28 @@ const Calendar = () => {
             }
         }
     };
-    
+
     useEffect(() => {
         fetchData();
-    }, [])
+    }, []);
+
     const addTask = async () => {
         if (newTask.trim() !== "" && newTaskDateTime.trim() !== "") {
             try {
-                const response = await axios.post(`${Baseurl}/api/users/addmedicine`, { task: newTask, dateTime: newTaskDateTime },{
+                const response = await axios.post(`${Baseurl}/api/users/addmedicine`, { task: newTask, dateTime: newTaskDateTime }, {
                     headers: {
                         'auth-token': `${localStorage.getItem('auth-token')}`,
                         'Content-Type': 'application/json',
-                    },});
+                    },
+                });
                 setTasks(response.data.new_user.addmedicine);
                 const taskData = response.data.new_user.task;
-                
+
                 setBundle({
-                  complete: taskData.complete,
-                  remove: taskData.remove,
-                  swap: taskData.snooze,
+                    complete: taskData.complete,
+                    remove: taskData.remove,
+                    swap: taskData.snooze,
                 });
-                console.log('bundle',bundle);
                 fetchData();
             } catch (err) {
                 console.log(err);
@@ -81,37 +84,36 @@ const Calendar = () => {
             setNewTask("");
             setNewTaskDateTime("");
         }
-}
+    };
 
-    const removeTask = async (index,task) => {
+    const removeTask = async (index, task) => {
         const audio = audioRef.current;
         audio.pause();
         audio.currentTime = 0;
         try {
-            console.log('delete');
-            console.log(index);
-            const response = await axios.delete(`${Baseurl}/api/users/deletemedicine/${index}/${task}`,{
+            const response = await axios.delete(`${Baseurl}/api/users/deletemedicine/${index}/${task}`, {
                 headers: {
                     'auth-token': `${localStorage.getItem('auth-token')}`,
                     'Content-Type': 'application/json',
-                },});
-            console.log(response.data);
+                },
+            });
             setTasks(response.data.user.addmedicine);
             const taskData = response.data.user.task;
             setBundle({
-              complete: taskData.complete,
-              remove: taskData.remove,
-              swap: taskData.snooze,
+                complete: taskData.complete,
+                remove: taskData.remove,
+                swap: taskData.snooze,
             });
             fetchData();
         } catch (err) {
             console.log(err);
         }
-
-
     };
 
     const snoozeTask = (index) => {
+        const audio = audioRef.current;
+        audio.pause();
+        audio.currentTime = 0;
         setSnoozeTimeInput(tasks[index].dateTime);
         setShowSnoozeTimeInput(true);
         setAlarmTaskIndex(index);
@@ -139,25 +141,27 @@ const Calendar = () => {
             setSnoozeTime(null); // Reset snooze time
         }
     };
-  
+
     const playSound = () => {
         const audio = audioRef.current;
         audio.play();
     };
 
-    const snoozeAlarm = async() => {
-        const newSnoozeTime = new Date(snoozeTimeInput).getTime();
-        setSnoozeTime(newSnoozeTime);
-        setShowSnoozeTimeInput(false);
+    const snoozeAlarm = async () => {
         const audio = audioRef.current;
         audio.pause();
         audio.currentTime = 0;
+        const newSnoozeTime = new Date(snoozeTimeInput).getTime();
+        setSnoozeTime(newSnoozeTime);
+        setShowSnoozeTimeInput(false);
+
         try {
-            const response = await axios.put(`${Baseurl}/api/users/updatemedicine`, {index:alarmTaskIndex, dateTime: snoozeTimeInput},{
+            const response = await axios.put(`${Baseurl}/api/users/updatemedicine`, { index: alarmTaskIndex, dateTime: snoozeTimeInput }, {
                 headers: {
                     'auth-token': `${localStorage.getItem('auth-token')}`,
                     'Content-Type': 'application/json',
-                },});
+                },
+            });
             setTasks(response.data.updated_user.addmedicine);
             fetchData();
         } catch (err) {
@@ -167,28 +171,28 @@ const Calendar = () => {
     };
 
     return (
-
         <div className="bg-green-100 h-screen">
-            <Navbar/>
+            <Navbar />
             <div className="medicalnote flex flex-col items-center p-12 ">
-                <div className="input-container flex flex-col space-y-2  justify-between items-center mb-5 w-3/4">
-                    <div className="flex">
-                    <input
-                        type="text"
-                        placeholder="New task"
-                        value={newTask}
-                        onChange={(e) => setNewTask(e.target.value)}
-                        className="w-3/4 p-2 border border-gray-300 rounded"
-                    />
-                    <input
-                        type="datetime-local"
-                        value={newTaskDateTime}
-                        onChange={(e) => setNewTaskDateTime(e.target.value)}
-                        className="w-1/4 p-2 border border-gray-300 rounded"
-                    /></div>
+                <div className="input-container flex flex-col space-y-2 justify-between items-center mb-5 w-3/4">
+                    <div className="flex w-full space-x-2">
+                        <input
+                            type="text"
+                            placeholder="New task"
+                            value={newTask}
+                            onChange={(e) => setNewTask(e.target.value)}
+                            className="flex-grow p-2 border border-gray-300 rounded"
+                        />
+                        <input
+                            type="datetime-local"
+                            value={newTaskDateTime}
+                            onChange={(e) => setNewTaskDateTime(e.target.value)}
+                            className="flex-shrink p-2 border border-gray-300 rounded"
+                        />
+                    </div>
                     <button
                         onClick={addTask}
-                        className="p-2 bg-green-blue w-44 font-bold text-white rounded hover:bg-green-800 transition duration-300"
+                        className="p-2 bg-green-700 w-44 font-bold text-white rounded hover:bg-green-800 transition duration-300"
                     >
                         Add
                     </button>
@@ -197,34 +201,30 @@ const Calendar = () => {
                     {tasks.map((task, index) => (
                         <li
                             key={index}
-                            className=" flex justify-between items-center border border-gray-300 p-2 mb-2 bg-white rounded"
+                            className="flex justify-between items-center border border-gray-300 p-2 mb-2 bg-white rounded"
                         >
-                            <div className="flex flex-col rounded">
-                                <span>
-                                    {task.text}
-                                </span>
-                                <span className="">{task.dateTime}</span>
+                            <div className="flex flex-col">
+                                <span>{task.text}</span>
+                                <span>{task.dateTime}</span>
                             </div>
                             <div className="flex space-x-2">
                                 <button
-                                    onClick={() => removeTask(index,"c")}
-                                    className="bg-red-400 px-2 py-1 rounded text-white font-bold w-24"
+                                    onClick={() => removeTask(index, "c")}
+                                    className="bg-red-400 px-2 py-1 rounded text-white font-bold"
                                 >
                                     Complete
                                 </button>
                                 {isAlarmPlaying && alarmTaskIndex === index ? (
-                                    <div>
-                                        <button
-                                            onClick={() => snoozeTask(index)}
-                                            className="bg-red-400 px-2 py-1 rounded text-white font-bold w-24"
-                                        >
-                                            Snooze
-                                        </button>
-                                    </div>
+                                    <button
+                                        onClick={() => snoozeTask(index)}
+                                        className="bg-red-400 px-2 py-1 rounded text-white font-bold"
+                                    >
+                                        Snooze
+                                    </button>
                                 ) : (
                                     <button
-                                        onClick={() => removeTask(index,"r")}
-                                        className="bg-red-400 px-2 py-1 rounded text-white font-bold w-240"
+                                        onClick={() => removeTask(index, "r")}
+                                        className="bg-red-400 px-2 py-1 rounded text-white font-bold"
                                     >
                                         Remove
                                     </button>
@@ -243,7 +243,7 @@ const Calendar = () => {
                         />
                         <button
                             onClick={snoozeAlarm}
-                            className="w-44 p-2 bg-green-blue font-bold text-white rounded hover:bg-green-800 transition duration-300"
+                            className="w-44 p-2 bg-green-700 font-bold text-white rounded hover:bg-green-800 transition duration-300"
                         >
                             Snooze Alarm
                         </button>
@@ -252,9 +252,8 @@ const Calendar = () => {
                 <audio ref={audioRef} src="alarm.mp3" preload="auto" />
             </div>
             <div className="p-12">
-            <Chart complete={bundle.complete} remove={bundle.remove} swap={bundle.swap} />
+                <Chart complete={bundle.complete} remove={bundle.remove} swap={bundle.swap} />
             </div>
-            
         </div>
     );
 }

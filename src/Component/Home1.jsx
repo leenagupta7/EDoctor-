@@ -7,8 +7,8 @@ const Home1 = () => {
   return (
     <div className="flex justify-around py-16 shadow-md">
       <div className="flex pt-16 flex-col space-y-4">
-        <h2 className="text-gray-600 text-2xl">Get Quick</h2>
-        <h2 className=" text-2xl">Medical Services</h2>
+        <h2 className="text-gray-600 text-2xl">Book Quick</h2>
+        <h2 className=" text-2xl">Therapy Session</h2>
         <div>
           <p className="text-gray-600 text-sm">
             You are not alone. Every step forward is a victory.</p>
@@ -16,7 +16,7 @@ const Home1 = () => {
         </div>
         <button className="bg-green-blue p-2 text-white font-bold rounded w-44">Get Services</button>
       </div>
-      <div className="relative h-96 w-96 flex items-center justify-center">
+      <div className="hidden md:relative md:h-96 md:w-96 md:flex md:items-center md:justify-center">
         <div className="absolute z-0 h-80 w-80 bg-green-blue rounded-full"></div>
         <div className="relative z-20 h-20 bg-white rounded flex right-28 bottom-20 shadow-md">
           <div className="flex space-x-2 text-black items-center w-44 items-center justify-center">

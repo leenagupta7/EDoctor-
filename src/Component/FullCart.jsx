@@ -26,7 +26,7 @@ const FullCart = () => {
   return (
     <div>
         <Navbar/>
-    <div className="mt-24 mx-44">
+    <div className="mt-24 mx-12 md:mx-44">
         <div className="grid grid-cols-6 gap-8 items-center py-2 text-gray-700 text-sm font-semibold">
             <p>Products</p>
             <p>Title</p>
