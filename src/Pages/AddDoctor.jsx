@@ -47,7 +47,14 @@ const AddDoctor = () => {
       });
       return;
     }
-
+    if(file===null){
+      Swal.fire({
+        title: 'Error',
+        text: 'Add profile photo',
+        icon: 'error',
+      });
+      return;
+    }
     const formData = new FormData();
     formData.append('email', formField.email);
     formData.append('password', formField.password);
@@ -93,14 +100,14 @@ const AddDoctor = () => {
   };
 
   return (
-    <div className="p-8 bg-gradient-to-r from-[#434974] to-[#242949] space-y-12 rounded-xl">
+    <div className="p-8 bg-white space-y-12 rounded-xl">
       <form className="flex flex-col space-y-6" onSubmit={handleSubmit}>
         <div className="flex justify-between items-center">
-          <label className="text-white w-1/4" htmlFor="email">
+          <label className=" w-1/4" htmlFor="email">
             Email
           </label>
           <input
-            className="w-3/4 p-2 rounded"
+            className="w-3/4 p-2 rounded border border-gray-400"
             id="email"
             type="email"
             name="email"
@@ -110,11 +117,11 @@ const AddDoctor = () => {
           />
         </div>
         <div className="flex justify-between items-center">
-          <label className="text-white w-1/4" htmlFor="password">
+          <label className=" w-1/4" htmlFor="password">
             Password
           </label>
           <input
-            className="w-3/4 p-2 rounded"
+            className="w-3/4 p-2 rounded border border-gray-400"
             id="password"
             type="password"
             name="password"
@@ -126,11 +133,11 @@ const AddDoctor = () => {
         {isSignUp && (
           <>
             <div className="flex justify-between items-center">
-              <label className="text-white w-1/4" htmlFor="name">
+              <label className=" w-1/4" htmlFor="name">
                 Name
               </label>
               <input
-                className="w-3/4 p-2 rounded"
+                className="w-3/4 p-2 rounded border border-gray-400"
                 id="name"
                 type="text"
                 name="name"
@@ -140,11 +147,11 @@ const AddDoctor = () => {
               />
             </div>
             <div className="flex justify-between items-center">
-              <label className="text-white w-1/4" htmlFor="specialization">
+              <label className=" w-1/4" htmlFor="specialization">
                 Specialization
               </label>
               <input
-                className="w-3/4 p-2 rounded"
+                className="w-3/4 p-2 rounded border border-gray-400"
                 id="specialization"
                 type="text"
                 name="specialization"
@@ -154,11 +161,11 @@ const AddDoctor = () => {
               />
             </div>
             <div className="flex justify-between items-center">
-              <label className="text-white w-1/4" htmlFor="college">
+              <label className=" w-1/4" htmlFor="college">
                 College Name
               </label>
               <input
-                className="w-3/4 p-2 rounded"
+                className="w-3/4 p-2 rounded border border-gray-400"
                 id="college"
                 type="text"
                 name="college"
@@ -168,11 +175,11 @@ const AddDoctor = () => {
               />
             </div>
             <div className="flex justify-between items-center">
-              <label className="text-white w-1/4" htmlFor="experience">
+              <label className=" w-1/4" htmlFor="experience">
                 Experience
               </label>
               <input
-                className="w-3/4 p-2 rounded"
+                className="w-3/4 p-2 rounded border border-gray-400"
                 id="experience"
                 type="text"
                 name="experience"
@@ -182,7 +189,7 @@ const AddDoctor = () => {
               />
             </div>
             <div className="flex justify-between items-center">
-              <label className="text-white w-1/4" htmlFor="file">
+              <label className=" w-1/4" htmlFor="file">
                 Profile Photo
               </label>
               <input
@@ -199,22 +206,22 @@ const AddDoctor = () => {
           </>
         )}
         {isSignUp ? (
-          <p className="text-white tracking-wider">
+          <p className=" tracking-wider">
             Already have an account?{' '}
-            <span onClick={handleAuthChange} className="cursor-pointer underline text-purple-500 hover:text-purple-500">
+            <span onClick={handleAuthChange} className="cursor-pointer underline text-green-500 ">
               SignIn
             </span>
           </p>
         ) : (
-          <p className="text-white tracking-wider">
+          <p className=" tracking-wider">
             Don't have an account?{' '}
-            <span onClick={handleAuthChange} className="cursor-pointer underline text-purple-500 hover:text-purple-500">
+            <span onClick={handleAuthChange} className="cursor-pointer underline text-green-500 ">
               SignUp
             </span>
           </p>
         )}
         <div className="flex justify-center">
-          <button className="text-white bg-purple-500 px-4 py-1 rounded hover:bg-purple-700 text-xl" type="submit">
+          <button className=" bg-green-500 px-4 py-1 rounded hover:text-white text-xl" type="submit">
             Submit
           </button>
         </div>

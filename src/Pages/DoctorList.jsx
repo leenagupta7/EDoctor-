@@ -38,23 +38,22 @@ const DoctorList = () => {
           Doctor.map((item, index) => (
             <div key={index} ><div key={index} className="shadow-md py-4 px-4 flex flex-col items-center w-84 space-y-8 ">
               <div className="flex items-center">
-                <img className="rounded-full h-56 w-56" src={item.image} alt="" />
+                <img className="rounded-full h-24 w-24 md:h-56 md:w-56" src={item.image} alt="" />
               </div>
-              <div className="w-96 p-4">
-                <p>{item.email}</p>
-                <div className="flex justify-between">
+              <div className=" p-4">
+                <div className="flex space-x-24 justify-between">
                   <span>Name</span>
                   <span>{item.name}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex space-x-24 justify-between">
                   <span>Specialization</span>
                   <span>{item.specialization}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex space-x-24 justify-between">
                   <span>Collge Name</span>
                   <span>{item.college_name}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex space-x-24 justify-between">
                   <span>Experience</span>
                   <span>{item.experience} years</span>
                 </div>

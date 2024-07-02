@@ -94,13 +94,13 @@ const UserLogin = () => {
   };
   return (
     <div>
-       <form onSubmit={handleSubmit} className="p-8 bg-gradient-to-r from-[#434974] to-[#242949] space-y-12 rounded-xl">
+       <form onSubmit={handleSubmit} className="p-8 bg-white space-y-12 rounded-xl">
         <div className="flex flex-col space-y-6">
           {underline && (
             <div className="flex justify-between items-center">
-              <label className="text-white w-1/4">Name</label>
+              <label className=" w-1/4">Name</label>
               <input
-                className="w-3/4 p-2 rounded"
+                className="w-3/4 p-2 rounded border border-gray-400"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -108,31 +108,31 @@ const UserLogin = () => {
             </div>
           )}
           <div className="flex justify-between items-center">
-            <label className="text-white w-1/4">Email</label>
+            <label className=" w-1/4">Email</label>
             <input
-              className="w-3/4 p-2 rounded"
+              className="w-3/4 p-2 rounded border border-gray-400"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
           </div>
           <div className="flex justify-between items-center">
-            <label className="text-white w-1/4">Password</label>
+            <label className=" w-1/4">Password</label>
             <input
-              className="w-3/4 p-2 rounded"
+              className="w-3/4 p-2 rounded border border-gray-400"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          {underline?(<p className="text-white tracking-wider">Already have an account?{' '}<span  onClick={handleChange} className=" cursor-pointer  underline text-purple-500 hover:text-purple-500">
+          {underline?(<p className=" tracking-wider">Already have an account?{' '}<span  onClick={handleChange} className=" cursor-pointer  underline text-green-500 ">
             SignIn
-          </span></p>):(<p className="text-white tracking-wider">Don't have an account?{' '}<span  onClick={handleChange} className=" cursor-pointer  underline text-purple-500 hover:text-purple-500">
+          </span></p>):(<p className=" tracking-wider">Don't have an account?{' '}<span  onClick={handleChange} className=" cursor-pointer  underline text-green-500 ">
             SignUp
           </span></p>)}
           <div className="flex justify-center">
             <button
-              className="text-white bg-purple-500 px-4 py-1 rounded hover:bg-purple-700 text-xl"
+              className=" bg-green-500 px-4 py-1 rounded hover:bg-green-500 text-xl hover:text-white"
               type="submit"
             >
               Submit
