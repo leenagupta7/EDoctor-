@@ -33,7 +33,7 @@ const DoctorList = () => {
     <div>
       <Navbar/>
     <div className="flex h-screen">
-      <div className="flex p-12 h-screen grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="flex justify-center p-12 h-screen grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {
           Doctor.map((item, index) => (
             <div key={index} ><div key={index} className="shadow-md py-4 px-4 flex flex-col items-center w-84 space-y-8 ">
