@@ -7,16 +7,16 @@ const Home1 = () => {
   return (
     <div className="flex justify-around py-16 shadow-md">
       <div className="flex pt-16 flex-col space-y-4">
-        <h2 className="text-gray-600 text-2xl">Book Quick</h2>
-        <h2 className=" text-2xl">Therapy Session</h2>
+        <h2 className="md:text-4xl lg:text-6xl text-gray-600 text-2xl">Book Quick</h2>
+        <h2 className=" text-2xl md:text-4xl lg:text-6xl">Therapy Session</h2>
         <div>
-          <p className="text-gray-600 text-sm">
+          <p className="text-gray-600 text-sm lg:text-xl">
             You are not alone. Every step forward is a victory.</p>
-          <p className="text-gray-600 text-sm"> Seek support and know that brighter days are ahead.</p>
+          <p className="text-gray-600 text-sm lg:text-xl"> Seek support and know that brighter days are ahead.</p>
         </div>
-        <button className="bg-green-blue p-2 text-white font-bold rounded w-44">Get Services</button>
+        <button className="bg-green-blue p-2 text-white font-bold rounded w-44 hover:bg-white hover:text-green-blue hover:border border-green-blue">Get Services</button>
       </div>
-      <div className="hidden md:relative md:h-96 md:w-96 md:flex md:items-center md:justify-center">
+      <div className="hidden md:relative h-96 w-96 md:flex md:items-center md:justify-center">
         <div className="absolute z-0 h-80 w-80 bg-green-blue rounded-full"></div>
         <div className="relative z-20 h-20 bg-white rounded flex right-28 bottom-20 shadow-md">
           <div className="flex space-x-2 text-black items-center w-44 items-center justify-center">
