@@ -47,7 +47,7 @@ const AddDoctor = () => {
       });
       return;
     }
-    if(file===null){
+    if(formField.file===null){
       Swal.fire({
         title: 'Error',
         text: 'Add profile photo',
