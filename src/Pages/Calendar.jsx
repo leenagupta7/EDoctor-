@@ -31,7 +31,7 @@ const Calendar = () => {
         return () => {
             clearInterval(timer);
         };
-    }, [tasks]);
+    }, [tasks,snoozeTimeInput]);
 
     const fetchData = async () => {
         if (authUser) {
@@ -111,11 +111,11 @@ const Calendar = () => {
     };
 
     const snoozeTask = (index) => {
-        const audio = audioRef.current;
-        audio.pause();
-        audio.currentTime = 0;
-        setSnoozeTimeInput(tasks[index].dateTime);
+        // const audio = audioRef.current;
+        // audio.pause();
+        // audio.currentTime = 0;
         setShowSnoozeTimeInput(true);
+        setSnoozeTimeInput(tasks[index].dateTime);
         setAlarmTaskIndex(index);
     };
 

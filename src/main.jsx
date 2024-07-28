@@ -15,7 +15,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </SocketContextProvider>
       </CartProvider>
     </AuthContextProvider>
-
   </React.StrictMode>
   ,
 )

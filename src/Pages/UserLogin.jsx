@@ -52,7 +52,7 @@ const UserLogin = () => {
       });
 
       const responseData = response.data;
-      console.log('hey',responseData);
+      //console.log('hey',responseData);
       if (responseData.success) {
         localStorage.clear();
         setAuthUser(responseData);
