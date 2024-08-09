@@ -125,7 +125,7 @@ const AddDoctor = () => {
             id="password"
             type="password"
             name="password"
-            placeholder="Enter Your Password"
+            placeholder="Enter this 5fjr35257gwt2"
             value={formField.password}
             onChange={handleChange}
           />

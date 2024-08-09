@@ -12,7 +12,7 @@ const Message = ({ Id }) => {
   const {onlineUsers} = useSocketContext();
   const isOnline = onlineUsers.includes(Id)
   const lastMessageRef= useRef();
-  console.log(onlineUsers);
+  //console.log(onlineUsers);
   useEffect(()=>{
     setTimeout(()=>{
       lastMessageRef.current?.scrollIntoView({behaviour:"smooth"})
@@ -20,7 +20,7 @@ const Message = ({ Id }) => {
   })
   const sendMessage = async (e) => {
     e.preventDefault();
-    console.log('hey');
+   // console.log('hey');
     try {
       const res = await axios.post(
         `${Baseurl}/api/message/send/${Id}`,
@@ -34,7 +34,7 @@ const Message = ({ Id }) => {
       );
       setText('');
       const data = res.data;
-      console.log('this', data);
+      //console.log('this', data);
       setMessages(prevMessages => [...prevMessages, data]);
       setText(''); // Clear input field after sending the message
     } catch (err) {
